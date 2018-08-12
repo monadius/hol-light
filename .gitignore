@@ -1,0 +1,6 @@
+*.cmi
+*.cmx
+*.o
+*.cmo
+pa_j.ml
+

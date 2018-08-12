@@ -234,9 +234,12 @@ let constant_poly p =
 (* ------------------------------------------------------------------------- *)
 
 let rec grobner histories basis pairs =
-  print_string(string_of_int(length basis)^" basis elements and "^
+  (* AS: report *)
+  (* print_string(string_of_int(length basis)^" basis elements and "^
                string_of_int(length pairs)^" critical pairs");
-  print_newline();
+  print_newline(); *)
+  remark (string_of_int(length basis)^" basis elements and "^
+          string_of_int(length pairs)^" critical pairs");
   match pairs with
     [] -> rev histories,basis
   | (l,(p1,p2))::opairs ->

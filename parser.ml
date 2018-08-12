@@ -1,3 +1,10 @@
+(* AS: *)
+include Fusion;;
+include Basics;;
+include Nets;;
+include Printer;;
+include Preterm;;
+
 (* ========================================================================= *)
 (* Lexical analyzer, type and preterm parsers.                               *)
 (*                                                                           *)
@@ -500,3 +507,6 @@ let parse_term s =
   if l = [] then
    (term_of_preterm o (retypecheck [])) ptm
   else failwith "Unparsed input following term";;
+
+(* AS: *)
+print_endline "parser.ml loaded";;

@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Calc_int;;
+
 (* ========================================================================= *)
 (* Framework for universal real decision procedures, and a simple instance.  *)
 (*                                                                           *)
@@ -635,3 +639,6 @@ let REAL_ARITH =
     REAL_INT_EQ_CONV,REAL_INT_GE_CONV,REAL_INT_GT_CONV,
     REAL_POLY_CONV,REAL_POLY_NEG_CONV,REAL_POLY_ADD_CONV,REAL_POLY_MUL_CONV,
     REAL_LINEAR_PROVER);;
+
+(* AS: *)
+print_endline "realarith.ml loaded";;

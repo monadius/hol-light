@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Realax;;
+
 (* ========================================================================= *)
 (* Calculation with integer-valued reals.                                    *)
 (*                                                                           *)
@@ -389,3 +393,6 @@ let REAL_INT_RED_CONV =
   REWRITES_CONV gconv_net;;
 
 let REAL_INT_REDUCE_CONV = DEPTH_CONV REAL_INT_RED_CONV;;
+
+(* AS: *)
+print_endline "calc_int.ml loaded";;

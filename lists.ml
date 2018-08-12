@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Ind_types;;
+
 (* ========================================================================= *)
 (* Theory of lists, plus characters and strings as lists of characters.      *)
 (*                                                                           *)
@@ -766,3 +770,6 @@ let dest_char,mk_char,dest_string,mk_string,CHAR_EQ_CONV,STRING_EQ_CONV =
     if compare ltm rtm = 0 then EQT_INTRO (REFL ltm) else
     STRING_DISTINCTNESS ltm rtm in
   char_of_term,mk_char,dest_string,mk_string,CHAR_EQ_CONV,STRING_EQ_CONV;;
+
+(* AS: *)
+print_endline "lists.ml loaded";;

@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Simp;;
+
 (* ========================================================================= *)
 (* Additional theorems, mainly about quantifiers, and additional tactics.    *)
 (*                                                                           *)
@@ -543,3 +547,6 @@ let DESTRUCT_TAC,FIX_TAC,INTRO_TAC,HYP_TAC =
   DESTRUCT_TAC,FIX_TAC,INTRO_TAC,HYP_TAC;;
 
 let CLAIM_TAC s tm = SUBGOAL_THEN tm (DESTRUCT_TAC s);;
+
+(* AS: *)
+print_endline "theorems.ml loaded";;

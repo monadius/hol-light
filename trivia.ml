@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Class;;
+
 (* ========================================================================= *)
 (* Trivial odds and ends.                                                    *)
 (*                                                                           *)
@@ -89,3 +93,6 @@ let one_Axiom = prove
 
 inductive_type_store :=
   ("1",(1,one_INDUCT,one_RECURSION))::(!inductive_type_store);;
+
+(* AS: *)
+print_endline "trivia.ml loaded";;

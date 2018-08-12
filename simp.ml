@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Itab;;
+
 (* ========================================================================= *)
 (* Simplification and rewriting.                                             *)
 (*                                                                           *)
@@ -559,3 +563,6 @@ let ABBREV_TAC tm =
 
 let EXPAND_TAC s = FIRST_ASSUM(SUBST1_TAC o SYM o
   check((=) s o fst o dest_var o rhs o concl)) THEN BETA_TAC;;
+
+(* AS: *)
+print_endline "simp.ml loaded";;

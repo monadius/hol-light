@@ -1,3 +1,6 @@
+(* AS: *)
+open Parser;;
+
 (* ========================================================================= *)
 (* Basic equality reasoning including conversionals.                         *)
 (*                                                                           *)
@@ -332,3 +335,6 @@ let CACHE_CONV =
               with Failure _ ->
                   let th = conv tm in
                   (net := enter [] (tm,ALPHA_HACK th) (!net); th);;
+
+(* AS: *)
+print_endline "equal.ml loaded";;

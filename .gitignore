@@ -1,6 +1,8 @@
+.DS_Store
 *.cmi
 *.cmx
 *.o
 *.cmo
 pa_j.ml
-
+update_database.ml
+core

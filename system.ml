@@ -19,6 +19,7 @@ Sys.catch_break true;;
 (* so they can be parsed in a type context etc.                              *)
 (* ------------------------------------------------------------------------- *)
 
+(* AS:
 let quotexpander s =
   if s = "" then failwith "Empty quotation" else
   let c = String.sub s 0 1 in
@@ -32,18 +33,23 @@ let quotexpander s =
   else "parse_term \""^(String.escaped s)^"\"";;
 
 Quotation.add "tot" (Quotation.ExStr (fun x -> quotexpander));;
+*)
 
 (* ------------------------------------------------------------------------- *)
 (* Modify the lexical analysis of uppercase identifiers.                     *)
 (* ------------------------------------------------------------------------- *)
 
+(* AS:
 set_jrh_lexer;;
+*)
 
 (* ------------------------------------------------------------------------- *)
 (* Load in the bignum library and set up printing in the toplevel.           *)
 (* ------------------------------------------------------------------------- *)
 
+(* AS:
 #load "nums.cma";;
+*)
 
 include Num;;
 
@@ -52,4 +58,14 @@ let print_num n =
   Format.print_string(string_of_num n);
   Format.close_box();;
 
+(* AS:
 #install_printer print_num;;
+*)
+
+(* AS: *)
+let needs s = ();;
+let loads s = ();;
+let loadt s = ();;
+
+(* AS: *)
+print_endline "system.ml loaded";;

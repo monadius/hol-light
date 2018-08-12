@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Pair;;
+
 (* ========================================================================= *)
 (* The axiom of infinity; construction of the natural numbers.               *)
 (*                                                                           *)
@@ -297,3 +301,6 @@ let new_specification =
           let sth = specifies names th in
           the_specifications := ((names,th),sth)::(!the_specifications);
           sth;;
+
+(* AS: *)
+print_endline "nums.ml loaded";;

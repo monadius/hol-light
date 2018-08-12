@@ -1,3 +1,8 @@
+(* AS: *)
+open Fusion;;
+open Basics;;
+open Printer;;
+
 (* ========================================================================= *)
 (* Preterms and pretypes; typechecking; translation to types and terms.      *)
 (*                                                                           *)
@@ -448,3 +453,6 @@ let type_of_pretype,term_of_preterm,retypecheck =
     ptm'' in
 
   type_of_pretype,term_of_preterm,retypecheck;;
+
+(* AS: *)
+print_endline "preterm.ml loaded";;

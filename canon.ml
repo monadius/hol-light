@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Trivia;;
+
 (* ========================================================================= *)
 (* Reasonably efficient conversions for various canonical forms.             *)
 (*                                                                           *)
@@ -731,3 +735,6 @@ let rec PROP_ATOM_CONV conv tm =
         -> BINOP_CONV (PROP_ATOM_CONV conv) tm
   | Comb(Const("~",_),_) -> RAND_CONV (PROP_ATOM_CONV conv) tm
   | _ -> TRY_CONV conv tm;;
+
+(* AS: *)
+print_endline "canon.ml loaded";;

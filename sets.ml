@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Int;;
+
 (* ========================================================================= *)
 (* Very basic set theory (using predicates as sets).                         *)
 (*                                                                           *)
@@ -4682,3 +4686,6 @@ let new_inductive_set =
     insert_in_rule th_rules,
     insert_in_rule th_induct,
     insert_in_rule th_cases;;
+
+(* AS: *)
+print_endline "sets.ml loaded";;

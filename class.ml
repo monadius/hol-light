@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Ind_defs;;
+
 (* ========================================================================= *)
 (* Extensional, classical reasoning with AC starts now!                      *)
 (*                                                                           *)
@@ -485,3 +489,6 @@ let bool_RECURSION = prove
 
 let inductive_type_store = ref
  ["bool",(2,bool_INDUCT,bool_RECURSION)];;
+
+(* AS: *)
+print_endline "class.ml loaded";;

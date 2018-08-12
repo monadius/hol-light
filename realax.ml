@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Lists;;
+
 (* ========================================================================= *)
 (* Theory of real numbers.                                                   *)
 (*                                                                           *)
@@ -1969,3 +1973,6 @@ do_list reduce_interface
   "inv",`hreal_inv:hreal->hreal`];;
 
 do_list remove_interface ["**"; "++"; "<<="; "==="; "fn"; "afn"];;
+
+(* AS: *)
+print_endline "realax.ml loaded";;

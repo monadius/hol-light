@@ -1,3 +1,7 @@
+(* AS: *)
+include System;;
+include Lib;;
+
 (* ========================================================================= *)
 (* Complete HOL kernel of types, terms and theorems.                         *)
 (*                                                                           *)
@@ -670,3 +674,6 @@ let aconv s t = alphaorder s t = 0;;
 (* ------------------------------------------------------------------------- *)
 
 let equals_thm th th' = dest_thm th = dest_thm th';;
+
+(* AS: *)
+print_endline "fusion.ml loaded";;

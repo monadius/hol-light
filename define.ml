@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Iterate;;
+
 (* ========================================================================= *)
 (* Automated support for general recursive definitions.                      *)
 (*                                                                           *)
@@ -987,3 +991,6 @@ let define =
       let g = mk_mconst(dest_var f) in
       let th3 = PROVE_HYP th2 (INST [g,f] th) in
       the_definitions := th3::(!the_definitions); th3;;
+
+(* AS: *)
+print_endline "define.ml loaded";;

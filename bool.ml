@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Equal;;
+
 (* ========================================================================= *)
 (* Boolean theory including (intuitionistic) defs of logical connectives.    *)
 (*                                                                           *)
@@ -481,3 +485,6 @@ let EXISTENCE =
         let ty = snd(dest_var(bndvar abs)) in
         MP (PINST [ty,aty] [abs,P] pth) th
     with Failure _ -> failwith "EXISTENCE";;
+
+(* AS: *)
+print_endline "bool.ml loaded";;

@@ -1,3 +1,8 @@
+(* AS: *)
+open Fusion;;
+open Basics;;
+open Nets;;
+
 (* ========================================================================= *)
 (* Simplistic HOL Light prettyprinter, using the OCaml "Format" library.     *)
 (*                                                                           *)
@@ -524,9 +529,11 @@ let print_thm = pp_print_thm std_formatter;;
 (* Install all the printers.                                                 *)
 (* ------------------------------------------------------------------------- *)
 
+(* AS: 
 #install_printer print_qtype;;
 #install_printer print_qterm;;
 #install_printer print_thm;;
+*)
 
 (* ------------------------------------------------------------------------- *)
 (* Conversions to string.                                                    *)
@@ -549,3 +556,6 @@ let print_to_string printer =
 let string_of_type = print_to_string pp_print_type;;
 let string_of_term = print_to_string pp_print_term;;
 let string_of_thm = print_to_string pp_print_thm;;
+
+(* AS: *)
+print_endline "printer.ml loaded";;

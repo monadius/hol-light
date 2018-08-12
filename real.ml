@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Realarith;;
+
 (* ========================================================================= *)
 (* More basic properties of the reals.                                       *)
 (*                                                                           *)
@@ -1956,3 +1960,6 @@ let REAL_ABS_LE_SQRT = prove
    `(x - y:real) pow 2 = (x pow 2 + y pow 2) - &2 * x * y`] THEN
   REWRITE_TAC[REAL_SQRT_POW_2] THEN REWRITE_TAC[SQRT_NEG; REAL_ABS_NEG] THEN
   REPEAT(POP_ASSUM MP_TAC) THEN REAL_ARITH_TAC);;
+
+(* AS: *)
+print_endline "real.ml loaded";;

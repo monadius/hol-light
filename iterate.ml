@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Sets;;
+
 (* ========================================================================= *)
 (* Generic iterated operations and special cases of sums over N and R.       *)
 (*                                                                           *)
@@ -2531,3 +2535,6 @@ let POLYNOMIAL_FUNCTION_FINITE_ROOTS = prove
 (* ------------------------------------------------------------------------- *)
 
 prioritize_num();;
+
+(* AS: *)
+print_endline "iterate.ml loaded";;

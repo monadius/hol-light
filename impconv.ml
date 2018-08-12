@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Quot;;
+
 (* ========================================================================= *)
 (* Implicational conversions, implicational rewriting and target rewriting.  *)
 (*                                                                           *)
@@ -1854,3 +1858,6 @@ Impconv.TARGET_REWRITE_TAC,
 Impconv.HINT_EXISTS_TAC,
 Impconv.SEQ_IMP_REWRITE_TAC,
 Impconv.CASE_REWRITE_TAC;;
+
+(* AS: *)
+print_endline "impconv.ml loaded";;

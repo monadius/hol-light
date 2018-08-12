@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Metis;;
+
 (* ========================================================================= *)
 (* Tools for defining quotient types and lifting first order theorems.       *)
 (*                                                                           *)
@@ -160,3 +164,6 @@ let lift_theorem =
     let ith = MATCH_MP pth cth in
     fun trths ->
       REWRITE_RULE (ith::trths);;
+
+(* AS: *)
+print_endline "quot.ml loaded";;

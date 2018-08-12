@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Normalizer;;
+
 (* ========================================================================= *)
 (* Generic Grobner basis algorithm.                                          *)
 (*                                                                           *)
@@ -214,9 +218,12 @@ let RING_AND_IDEAL_CONV =
   (* ----------------------------------------------------------------------- *)
 
   let rec grobner_basis basis pairs =
-    Format.print_string(string_of_int(length basis)^" basis elements and "^
+    (* AS: Format.print_string -> report *)
+    (* Format.print_string(string_of_int(length basis)^" basis elements and "^
                         string_of_int(length pairs)^" critical pairs");
-    Format.print_newline();
+    Format.print_newline(); *)
+    remark (string_of_int(length basis)^" basis elements and "^
+            string_of_int(length pairs)^" critical pairs");
     match pairs with
       [] -> basis
     | (l,(p1,p2))::opairs ->
@@ -525,8 +532,10 @@ let RING_AND_IDEAL_CONV =
             CONV_RULE(RAND_CONV(BINOP_CONV RING_NORMALIZE_CONV)) nth in
           let th2 = funpow deg (IDOM_RULE o CONJ th1) NOT_EQ_01 in
           vars,l,cert,th2 in
-      Format.print_string("Translating certificate to HOL inferences");
-      Format.print_newline();
+      (* AS: *)
+      (* Format.print_string("Translating certificate to HOL inferences");
+      Format.print_newline(); *)
+      remark "Translating certificate to HOL inferences";
       let cert_pos = map
         (fun (i,p) -> i,filter (fun (c,m) -> c >/ num_0) p) cert
       and cert_neg = map
@@ -696,3 +705,6 @@ let NUM_RING =
   fun tm -> let th = initconv tm in
             if rand(concl th) = t_tm then th
             else EQ_MP (SYM th) (rawring(rand(concl th)));;
+
+(* AS: *)
+print_endline "grobner.ml loaded";;

@@ -1,3 +1,6 @@
+(* AS: *)
+open Fusion;;
+
 (* ========================================================================= *)
 (* More syntax constructors, and prelogical utilities like matching.         *)
 (*                                                                           *)
@@ -425,3 +428,6 @@ let follow_path =
     | "r"::t -> follow_path t (rand tm)
     | _::t -> follow_path t (body tm) in
   fun s tm -> follow_path (explode s) tm;;
+
+(* AS: *)
+print_endline "basics.ml loaded";;

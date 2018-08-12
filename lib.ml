@@ -1,3 +1,6 @@
+(* AS: *)
+open Num;;
+
 (* ========================================================================= *)
 (* Convenient library functions.                                             *)
 (*                                                                           *)
@@ -422,15 +425,19 @@ let report s =
 (* Convenient function for issuing a warning.                                *)
 (* ------------------------------------------------------------------------- *)
 
+(* AS: turn off warnings *)
+let print_warnings = ref false;;
+
 let warn cond s =
-  if cond then report ("Warning: "^s) else ();;
+  if !print_warnings && cond then report ("Warning: "^s) else ();;
 
 (* ------------------------------------------------------------------------- *)
 (* Flags to switch on verbose mode.                                          *)
 (* ------------------------------------------------------------------------- *)
 
-let verbose = ref true;;
-let report_timing = ref true;;
+(* AS: flags = false *)
+let verbose = ref false;;
+let report_timing = ref false;;
 
 (* ------------------------------------------------------------------------- *)
 (* Switchable version of "report".                                           *)
@@ -770,7 +777,9 @@ let rec choose t =
 
 let print_fpf (f:('a,'b)func) = Format.print_string "<func>";;
 
+(* AS
 #install_printer print_fpf;;
+*)
 
 (* ------------------------------------------------------------------------- *)
 (* Set operations parametrized by equality (from Steven Obua).               *)
@@ -841,3 +850,6 @@ let string_of_file filename =
 let file_of_string filename s =
   let fd = Pervasives.open_out filename in
   output_string fd s; close_out fd;;
+
+(* AS: *)
+print_endline "lib.ml loaded";;

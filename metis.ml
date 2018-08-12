@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Meson;;
+
 (* ========================================================================= *)
 (* Metis first-order theorem proving derived rule/tactic for HOL Light.      *)
 (*                                                                           *)
@@ -10160,3 +10164,6 @@ let ASM_METIS_TAC = Metis.GEN_METIS_TAC;;
 let METIS_TAC ths = POP_ASSUM_LIST(K ALL_TAC) THEN ASM_METIS_TAC ths;;
 
 let METIS ths tm = prove(tm,METIS_TAC ths);;
+
+(* AS: *)
+print_endline "metis.ml loaded";;

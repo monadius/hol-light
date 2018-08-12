@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Arith;;
+
 (* ========================================================================= *)
 (* Theory of wellfounded relations.                                          *)
 (*                                                                           *)
@@ -396,3 +400,6 @@ let WF_INDUCT_TAC =
     let th2 = CONV_RULE(LAND_CONV qqconvs) (DISCH_ALL th1) in
     (MATCH_MP_TAC th2 THEN MAP_EVERY X_GEN_TAC fvs THEN
      CONV_TAC(LAND_CONV qqconvs) THEN DISCH_THEN ASSUME_TAC) gl;;
+
+(* AS: *)
+print_endline "wf.ml loaded";;

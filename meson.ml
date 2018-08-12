@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Canon;;
+
 (* ========================================================================= *)
 (* Version of the MESON procedure a la PTTP. Various search options.         *)
 (*                                                                           *)
@@ -845,3 +849,6 @@ let MESON_TAC ths = POP_ASSUM_LIST(K ALL_TAC) THEN ASM_MESON_TAC ths;;
 (* ------------------------------------------------------------------------- *)
 
 let MESON ths tm = prove(tm,MESON_TAC ths);;
+
+(* AS: *)
+print_endline "meson.ml loaded";;

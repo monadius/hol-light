@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Drule;;
+
 (* ========================================================================= *)
 (* System of tactics (slightly different from any traditional LCF method).   *)
 (*                                                                           *)
@@ -921,5 +925,10 @@ let top_thm() =
 (* Install the goal-related printers.                                        *)
 (* ------------------------------------------------------------------------- *)
 
+(* AS:
 #install_printer print_goal;;
 #install_printer print_goalstack;;
+*)
+
+(* AS: *)
+print_endline "tactics.ml loaded";;

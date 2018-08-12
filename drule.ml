@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Bool;;
+
 (* ========================================================================= *)
 (* More sophisticated derived rules including definitions and rewriting.     *)
 (*                                                                           *)
@@ -574,3 +578,6 @@ let new_definition tm =
                   TRANS ith (BETA_CONV(rand(concl ith)))) largs th1 in
   let rvs = filter (not o C mem avs) largs in
   itlist GEN rvs (itlist GEN avs th2);;
+
+(* AS: *)
+print_endline "drule.ml loaded";;

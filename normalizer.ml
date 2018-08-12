@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Calc_num;;
+
 (* ========================================================================= *)
 (* Relatively efficient HOL conversions for canonical polynomial form.       *)
 (*                                                                           *)
@@ -563,3 +567,6 @@ let NUM_NORMALIZE_CONV =
       SEMIRING_ADD_CONV,SEMIRING_MUL_CONV,SEMIRING_POW_CONV)
      (<) in
   NUM_NORMALIZE_CONV;;
+
+(* AS: *)
+print_endline "normalizer.ml loaded";;

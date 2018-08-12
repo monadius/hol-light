@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Nums;;
+
 (* ========================================================================= *)
 (* Definition by primitive recursion and other tools for inductive types.    *)
 (*                                                                           *)
@@ -113,3 +117,6 @@ let new_recursive_definition =
     let dths = map2 SPECL fvs (CONJUNCTS dth) in
     let th = end_itlist CONJ dths in
     the_recursive_definitions := th::(!the_recursive_definitions); th;;
+
+(* AS: *)
+print_endline "recursion.ml loaded";;

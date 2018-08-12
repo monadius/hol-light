@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Tactics;;
+
 (* ========================================================================= *)
 (* Intuitionistic theorem prover (complete for propositional fragment).      *)
 (*                                                                           *)
@@ -71,3 +75,6 @@ let ITAUT_TAC =
 (* ------------------------------------------------------------------------- *)
 
 let ITAUT tm = prove(tm,ITAUT_TAC);;
+
+(* AS: *)
+print_endline "itab.ml loaded";;

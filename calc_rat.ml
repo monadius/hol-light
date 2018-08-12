@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Real;;
+
 (* ========================================================================= *)
 (* Calculation with rational-valued reals.                                   *)
 (*                                                                           *)
@@ -658,3 +662,6 @@ let REAL_SHRINK_GROW = prove
  (`!x y. abs x < &1
          ==> x / (&1 - abs x) / (&1 + abs(x / (&1 - abs x))) = x`,
   REWRITE_TAC[REAL_SHRINK_GROW_EQ]);;
+
+(* AS: *)
+print_endline "calc_rat.ml loaded";;

@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Iterate;;
+
 (* ========================================================================= *)
 (* Definition of finite Cartesian product types.                             *)
 (*                                                                           *)
@@ -584,3 +588,6 @@ let DISJOINT_PCROSS = prove
         DISJOINT (s PCROSS t) (s' PCROSS t') <=>
         DISJOINT s s' \/ DISJOINT t t'`,
   REWRITE_TAC[DISJOINT; INTER_PCROSS; PCROSS_EQ_EMPTY]);;
+
+(* AS: *)
+print_endline "cart.ml loaded";;

@@ -11,6 +11,10 @@ needs "lib.ml";;
 
 module type Hol_kernel =
   sig
+      val reset_core_counters: unit -> unit
+      val core_counters: unit -> (string * int)list
+      val get_core_counter: string -> int
+
       type hol_type = private
         Tyvar of string
       | Tyapp of string *  hol_type list
@@ -92,6 +96,21 @@ end;;
 (* ------------------------------------------------------------------------- *)
 
 module Hol : Hol_kernel = struct
+
+  let create_counter, get_core_counter, core_counters, reset_core_counters =
+    let tbl = Hashtbl.create 100 in
+    let create name =
+      try Hashtbl.find tbl name with
+      Not_found ->
+        let counter = ref 0 in
+        Hashtbl.add tbl name counter;
+        counter in
+    let get name = !(Hashtbl.find tbl name) in
+    let all () =
+      Hashtbl.fold (fun name v r -> (name, !v) :: r) tbl []
+        |> List.sort (fun (_, v1) (_, v2) -> Pervasives.compare v2 v1) in
+    let reset () = Hashtbl.iter (fun _ v -> v := 0) tbl in
+    create, get, all, reset
 
   type hol_type = Tyvar of string
                 | Tyapp of string *  hol_type list
@@ -231,12 +250,16 @@ module Hol : Hol_kernel = struct
 (* Finds the type of a term (assumes it is well-typed).                      *)
 (* ------------------------------------------------------------------------- *)
 
-  let rec type_of tm =
-    match tm with
-      Var(_,ty) -> ty
-    | Const(_,ty) -> ty
-    | Comb(s,_) -> (match type_of s with Tyapp("fun",[dty;rty]) -> rty)
-    | Abs(Var(_,ty),t) -> Tyapp("fun",[ty;type_of t])
+  let type_of =
+    let counter = create_counter "type_of" in
+    let rec type_of tm =
+      match tm with
+        Var(_,ty) -> ty
+      | Const(_,ty) -> ty
+      | Comb(s,_) -> (match type_of s with Tyapp("fun",[dty;rty]) -> rty)
+      | Abs(Var(_,ty),t) -> Tyapp("fun",[ty;type_of t]) in
+    fun tm ->
+      incr counter; type_of tm
 
 (* ------------------------------------------------------------------------- *)
 (* Primitive discriminators.                                                 *)
@@ -292,12 +315,16 @@ module Hol : Hol_kernel = struct
 (* Finds the variables free in a term (list of terms).                       *)
 (* ------------------------------------------------------------------------- *)
 
-  let rec frees tm =
-    match tm with
-      Var(_,_) -> [tm]
-    | Const(_,_) -> []
-    | Abs(bv,bod) -> subtract (frees bod) [bv]
-    | Comb(s,t) -> union (frees s) (frees t)
+  let frees =
+    let counter = create_counter "frees" in
+    let rec frees tm =
+      match tm with
+        Var(_,_) -> [tm]
+      | Const(_,_) -> []
+      | Abs(bv,bod) -> subtract (frees bod) [bv]
+      | Comb(s,t) -> union (frees s) (frees t) in
+    fun tm ->
+      incr counter; frees tm
 
   let freesl tml = itlist (union o frees) tml []
 
@@ -305,22 +332,30 @@ module Hol : Hol_kernel = struct
 (* Whether all free variables in a term appear in a list.                    *)
 (* ------------------------------------------------------------------------- *)
 
-  let rec freesin acc tm =
-    match tm with
-      Var(_,_) -> mem tm acc
-    | Const(_,_) -> true
-    | Abs(bv,bod) -> freesin (bv::acc) bod
-    | Comb(s,t) -> freesin acc s && freesin acc t
+  let freesin =
+    let counter = create_counter "freesin" in
+    let rec freesin acc tm =
+      match tm with
+        Var(_,_) -> mem tm acc
+      | Const(_,_) -> true
+      | Abs(bv,bod) -> freesin (bv::acc) bod
+      | Comb(s,t) -> freesin acc s && freesin acc t in
+    fun acc tm ->
+      incr counter; freesin acc tm
 
 (* ------------------------------------------------------------------------- *)
 (* Whether a variable (or constant in fact) is free in a term.               *)
 (* ------------------------------------------------------------------------- *)
 
-  let rec vfree_in v tm =
-    match tm with
-      Abs(bv,bod) -> v <> bv && vfree_in v bod
-    | Comb(s,t) -> vfree_in v s || vfree_in v t
-    | _ -> Pervasives.compare tm v = 0
+  let vfree_in =
+    let counter = create_counter "vfree_in" in
+    let rec vfree_in v tm =
+      match tm with
+        Abs(bv,bod) -> v <> bv && vfree_in v bod
+      | Comb(s,t) -> vfree_in v s || vfree_in v t
+      | _ -> Pervasives.compare tm v = 0 in
+    fun v tm ->
+      incr counter; vfree_in v tm
 
 (* ------------------------------------------------------------------------- *)
 (* Finds the type variables (free) in a term.                                *)
@@ -348,6 +383,7 @@ module Hol : Hol_kernel = struct
 (* ------------------------------------------------------------------------- *)
 
   let vsubst =
+    let counter = create_counter "vsubst" in
     let rec vsubst ilist tm =
       match tm with
         Var(_,_) -> rev_assocd tm ilist tm
@@ -363,6 +399,7 @@ module Hol : Hol_kernel = struct
                          Abs(v',vsubst ((v',v)::ilist') s)
                     else Abs(v,s') in
     fun theta ->
+      incr counter;
       if theta = [] then (fun tm -> tm) else
       if forall (function (t,Var(_,y)) -> Pervasives.compare (type_of t) y = 0
                         | _ -> false) theta
@@ -375,6 +412,7 @@ module Hol : Hol_kernel = struct
   exception Clash of term
 
   let inst =
+    let counter = create_counter "inst" in
     let rec inst env tyin tm =
       match tm with
         Var(n,ty)   -> let ty' = type_subst tyin ty in
@@ -396,21 +434,29 @@ module Hol : Hol_kernel = struct
                        let y'' = variant ifrees y' in
                        let z = Var(fst(dest_var y''),snd(dest_var y)) in
                        inst env tyin (Abs(z,vsubst[z,y] t)) in
-    fun tyin -> if tyin = [] then fun tm -> tm else inst [] tyin
+    fun tyin -> incr counter; if tyin = [] then fun tm -> tm else inst [] tyin
 
 (* ------------------------------------------------------------------------- *)
 (* A few bits of general derived syntax.                                     *)
 (* ------------------------------------------------------------------------- *)
 
-  let rator tm =
-    match tm with
-      Comb(l,r) -> l
-    | _ -> failwith "rator: Not a combination"
+  let rator =
+    let counter = create_counter "rator" in
+    let rator tm =
+      match tm with
+        Comb(l,r) -> l
+      | _ -> failwith "rator: Not a combination" in
+    fun tm ->
+      incr counter; rator tm
 
-  let rand tm =
-    match tm with
-      Comb(l,r) -> r
-    | _ -> failwith "rand: Not a combination"
+  let rand =
+    let counter = create_counter "rand" in
+    let rand tm =
+      match tm with
+        Comb(l,r) -> r
+      | _ -> failwith "rand: Not a combination" in
+    fun tm ->
+      incr counter; rand tm
 
 (* ------------------------------------------------------------------------- *)
 (* Syntax operations for equations.                                          *)
@@ -418,6 +464,9 @@ module Hol : Hol_kernel = struct
 
   let safe_mk_eq l r =
     let ty = type_of l in
+    Comb(Comb(Const("=",Tyapp("fun",[ty;Tyapp("fun",[ty;bool_ty])])),l),r)
+
+  let safe_mk_eq_ty l r ty =
     Comb(Comb(Const("=",Tyapp("fun",[ty;Tyapp("fun",[ty;bool_ty])])),l),r)
 
   let dest_eq tm =
@@ -429,57 +478,99 @@ module Hol : Hol_kernel = struct
 (* Useful to have term union modulo alpha-conversion for assumption lists.   *)
 (* ------------------------------------------------------------------------- *)
 
-  let rec ordav env x1 x2 =
-    match env with
-      [] -> Pervasives.compare x1 x2
-    | (t1,t2)::oenv -> if Pervasives.compare x1 t1 = 0
-                       then if Pervasives.compare x2 t2 = 0
-                            then 0 else -1
-                       else if Pervasives.compare x2 t2 = 0 then 1
-                       else ordav oenv x1 x2
+  let ordav =
+    let counter = create_counter "ordav" in
+    let rec ordav env x1 x2 =
+      match env with
+        [] -> Pervasives.compare x1 x2
+      | (t1,t2)::oenv -> if Pervasives.compare x1 t1 = 0
+                        then if Pervasives.compare x2 t2 = 0
+                              then 0 else -1
+                        else if Pervasives.compare x2 t2 = 0 then 1
+                        else ordav oenv x1 x2 in
+    fun env x1 x2 ->
+      incr counter; ordav env x1 x2
 
-  let rec orda env tm1 tm2 =
-    if tm1 == tm2 && forall (fun (x,y) -> x = y) env then 0 else
-    match (tm1,tm2) with
-      Var(x1,ty1),Var(x2,ty2) -> ordav env tm1 tm2
-    | Const(x1,ty1),Const(x2,ty2) -> Pervasives.compare tm1 tm2
-    | Comb(s1,t1),Comb(s2,t2) ->
-          let c = orda env s1 s2 in if c <> 0 then c else orda env t1 t2
-    | Abs(Var(_,ty1) as x1,t1),Abs(Var(_,ty2) as x2,t2) ->
-          let c = Pervasives.compare ty1 ty2 in
-          if c <> 0 then c else orda ((x1,x2)::env) t1 t2
-    | Const(_,_),_ -> -1
-    | _,Const(_,_) -> 1
-    | Var(_,_),_ -> -1
-    | _,Var(_,_) -> 1
-    | Comb(_,_),_ -> -1
-    | _,Comb(_,_) -> 1
+  (* let orda =
+    let counter = create_counter "orda" in
+    let rec orda env tm1 tm2 =
+      if tm1 == tm2 && forall (fun (x,y) -> x = y) env then 0 else
+      match (tm1,tm2) with
+        Var(x1,ty1),Var(x2,ty2) -> ordav env tm1 tm2
+      | Const(x1,ty1),Const(x2,ty2) -> Pervasives.compare tm1 tm2
+      | Comb(s1,t1),Comb(s2,t2) ->
+            let c = orda env s1 s2 in if c <> 0 then c else orda env t1 t2
+      | Abs(Var(_,ty1) as x1,t1),Abs(Var(_,ty2) as x2,t2) ->
+            let c = Pervasives.compare ty1 ty2 in
+            if c <> 0 then c else orda ((x1,x2)::env) t1 t2
+      | Const(_,_),_ -> -1
+      | _,Const(_,_) -> 1
+      | Var(_,_),_ -> -1
+      | _,Var(_,_) -> 1
+      | Comb(_,_),_ -> -1
+      | _,Comb(_,_) -> 1 in
+    fun env tm1 tm2 ->
+      incr counter; orda env tm1 tm2 *)
 
-  let alphaorder = orda []
+  let orda =
+    let counter = create_counter "orda" in
+    let rec orda env_eq env tm1 tm2 =
+      if tm1 == tm2 && env_eq then 0 else
+      match (tm1,tm2) with
+        Var(x1,ty1),Var(x2,ty2) -> ordav env tm1 tm2
+      | Const(x1,ty1),Const(x2,ty2) -> Pervasives.compare tm1 tm2
+      | Comb(s1,t1),Comb(s2,t2) ->
+            let c = orda env_eq env s1 s2 in if c <> 0 then c else orda env_eq env t1 t2
+      | Abs(Var(_,ty1) as x1,t1),Abs(Var(_,ty2) as x2,t2) ->
+            let c = Pervasives.compare ty1 ty2 in
+            if c <> 0 then c else orda (env_eq && Pervasives.compare x1 x2 = 0) ((x1,x2)::env) t1 t2
+      | Const(_,_),_ -> -1
+      | _,Const(_,_) -> 1
+      | Var(_,_),_ -> -1
+      | _,Var(_,_) -> 1
+      | Comb(_,_),_ -> -1
+      | _,Comb(_,_) -> 1 in
+    fun tm1 tm2 ->
+      incr counter; orda true [] tm1 tm2
 
-  let rec term_union l1 l2 =
-    match (l1,l2) with
-      ([],l2) -> l2
-    | (l1,[]) -> l1
-    | (h1::t1,h2::t2) -> let c = alphaorder h1 h2 in
-                         if c = 0 then h1::(term_union t1 t2)
-                         else if c < 0 then h1::(term_union t1 l2)
-                         else h2::(term_union l1 t2)
 
-  let rec term_remove t l =
-    match l with
-      s::ss -> let c = alphaorder t s in
-               if c > 0 then
-                 let ss' = term_remove t ss in
-                 if ss' == ss then l else s::ss'
-               else if c = 0 then ss else l
-    | [] -> l
+  let alphaorder = orda
 
-  let rec term_image f l =
-    match l with
-      h::t -> let h' = f h and t' = term_image f t in
-              if h' == h && t' == t then l else term_union [h'] t'
-    | [] -> l
+  let term_union =
+    let counter = create_counter "term_union" in
+    let rec term_union l1 l2 =
+      match (l1,l2) with
+        ([],l2) -> l2
+      | (l1,[]) -> l1
+      | (h1::t1,h2::t2) -> let c = alphaorder h1 h2 in
+                          if c = 0 then h1::(term_union t1 t2)
+                          else if c < 0 then h1::(term_union t1 l2)
+                          else h2::(term_union l1 t2) in
+    fun l1 l2 ->
+      incr counter; term_union l1 l2
+
+  let term_remove =
+    let counter = create_counter "term_remove" in
+    let rec term_remove t l =
+      match l with
+        s::ss -> let c = alphaorder t s in
+                if c > 0 then
+                  let ss' = term_remove t ss in
+                  if ss' == ss then l else s::ss'
+                else if c = 0 then ss else l
+      | [] -> l in
+    fun t l ->
+      incr counter; term_remove t l
+
+  let term_image =
+    let counter = create_counter "term_image" in
+    let rec term_image f l =
+      match l with
+        h::t -> let h' = f h and t' = term_image f t in
+                if h' == h && t' == t then l else term_union [h'] t'
+      | [] -> l in
+    fun f l ->
+      incr counter; term_image f l
 
 (* ------------------------------------------------------------------------- *)
 (* Basic theorem destructors.                                                *)
@@ -495,74 +586,127 @@ module Hol : Hol_kernel = struct
 (* Basic equality properties; TRANS is derivable but included for efficiency *)
 (* ------------------------------------------------------------------------- *)
 
-  let REFL tm =
-    Sequent([],safe_mk_eq tm tm)
+  let REFL =
+    let counter = create_counter "REFL" in
+    let REFL tm =
+      Sequent([],safe_mk_eq tm tm) in
+    fun tm ->
+      incr counter; REFL tm
 
-  let TRANS (Sequent(asl1,c1)) (Sequent(asl2,c2)) =
-    match (c1,c2) with
-      Comb((Comb(Const("=",_),_) as eql),m1),Comb(Comb(Const("=",_),m2),r)
-        when alphaorder m1 m2 = 0 -> Sequent(term_union asl1 asl2,Comb(eql,r))
-    | _ -> failwith "TRANS"
+  let TRANS =
+    let counter = create_counter "TRANS" in
+    let TRANS (Sequent(asl1,c1)) (Sequent(asl2,c2)) =
+      match (c1,c2) with
+        Comb((Comb(Const("=",_),_) as eql),m1),Comb(Comb(Const("=",_),m2),r)
+          when alphaorder m1 m2 = 0 -> Sequent(term_union asl1 asl2,Comb(eql,r))
+      | _ -> failwith "TRANS" in
+    fun th1 th2 ->
+      incr counter; TRANS th1 th2
 
 (* ------------------------------------------------------------------------- *)
 (* Congruence properties of equality.                                        *)
 (* ------------------------------------------------------------------------- *)
 
-  let MK_COMB(Sequent(asl1,c1),Sequent(asl2,c2)) =
-     match (c1,c2) with
-       Comb(Comb(Const("=",_),l1),r1),Comb(Comb(Const("=",_),l2),r2) ->
-        (match type_of r1 with
-           Tyapp("fun",[ty;_]) when Pervasives.compare ty (type_of r2) = 0
-             -> Sequent(term_union asl1 asl2,
-                        safe_mk_eq (Comb(l1,l2)) (Comb(r1,r2)))
-         | _ -> failwith "MK_COMB: types do not agree")
-     | _ -> failwith "MK_COMB: not both equations"
+  let MK_COMB =
+    let counter = create_counter "MK_COMB" in
+    let MK_COMB(Sequent(asl1,c1),Sequent(asl2,c2)) =
+      match (c1,c2) with
+        Comb(Comb(Const("=",_),l1),r1),Comb(Comb(Const("=",_),l2),r2) ->
+          (match type_of r1 with
+            Tyapp("fun",[ty;_]) when Pervasives.compare ty (type_of r2) = 0
+              -> Sequent(term_union asl1 asl2,
+                          safe_mk_eq (Comb(l1,l2)) (Comb(r1,r2)))
+          | _ -> failwith "MK_COMB: types do not agree")
+      | _ -> failwith "MK_COMB: not both equations" in
+    fun p ->
+      incr counter; MK_COMB p
 
-  let ABS v (Sequent(asl,c)) =
-    match (v,c) with
-      Var(_,_),Comb(Comb(Const("=",_),l),r) when not(exists (vfree_in v) asl)
-         -> Sequent(asl,safe_mk_eq (Abs(v,l)) (Abs(v,r)))
-    | _ -> failwith "ABS";;
+  (* let MK_COMB =
+    let counter = create_counter "MK_COMB" in
+    let MK_COMB(Sequent(asl1,c1),Sequent(asl2,c2)) =
+      match (c1,c2) with
+        Comb(Comb(Const("=",Tyapp("fun", [Tyapp("fun", [ty1; ty]); _])),l1),r1),Comb(Comb(Const("=",Tyapp("fun",[ty2; _])),l2),r2) ->
+          if Pervasives.compare ty1 ty2 = 0 then
+            Sequent(term_union asl1 asl2,
+                    safe_mk_eq_ty (Comb(l1,l2)) (Comb(r1,r2)) ty)
+          else failwith "MK_COMB: types do not agree"
+      | _ -> failwith "MK_COMB: not both equations" in
+    fun p ->
+      incr counter; MK_COMB p *)
+
+  let ABS =
+    let counter = create_counter "ABS" in
+    let ABS v (Sequent(asl,c)) =
+      match (v,c) with
+        Var(_,_),Comb(Comb(Const("=",_),l),r) when not(exists (vfree_in v) asl)
+          -> Sequent(asl,safe_mk_eq (Abs(v,l)) (Abs(v,r)))
+      | _ -> failwith "ABS" in
+    fun v t ->
+      incr counter; ABS v t
 
 (* ------------------------------------------------------------------------- *)
 (* Trivial case of lambda calculus beta-conversion.                          *)
 (* ------------------------------------------------------------------------- *)
 
-  let BETA tm =
-    match tm with
-      Comb(Abs(v,bod),arg) when Pervasives.compare arg v = 0
-        -> Sequent([],safe_mk_eq tm bod)
-    | _ -> failwith "BETA: not a trivial beta-redex"
+  let BETA =
+    let counter = create_counter "BETA" in
+    let BETA tm =
+      match tm with
+        Comb(Abs(v,bod),arg) when Pervasives.compare arg v = 0
+          -> Sequent([],safe_mk_eq tm bod)
+      | _ -> failwith "BETA: not a trivial beta-redex" in
+    fun tm ->
+      incr counter; BETA tm
 
 (* ------------------------------------------------------------------------- *)
 (* Rules connected with deduction.                                           *)
 (* ------------------------------------------------------------------------- *)
 
-  let ASSUME tm =
-    if Pervasives.compare (type_of tm) bool_ty = 0 then Sequent([tm],tm)
-    else failwith "ASSUME: not a proposition"
+  let ASSUME =
+    let counter = create_counter "ASSUME" in
+    let ASSUME tm =
+      if Pervasives.compare (type_of tm) bool_ty = 0 then Sequent([tm],tm)
+      else failwith "ASSUME: not a proposition" in
+    fun tm ->
+      incr counter; ASSUME tm
 
-  let EQ_MP (Sequent(asl1,eq)) (Sequent(asl2,c)) =
-    match eq with
-      Comb(Comb(Const("=",_),l),r) when alphaorder l c = 0
-        -> Sequent(term_union asl1 asl2,r)
-    | _ -> failwith "EQ_MP"
+  let EQ_MP =
+    let counter = create_counter "EQ_MP" in
+    let EQ_MP (Sequent(asl1,eq)) (Sequent(asl2,c)) =
+      match eq with
+        Comb(Comb(Const("=",_),l),r) when alphaorder l c = 0
+          -> Sequent(term_union asl1 asl2,r)
+      | _ -> failwith "EQ_MP" in
+    fun t1 t2 ->
+      incr counter; EQ_MP t1 t2
 
-  let DEDUCT_ANTISYM_RULE (Sequent(asl1,c1)) (Sequent(asl2,c2)) =
-    let asl1' = term_remove c2 asl1 and asl2' = term_remove c1 asl2 in
-    Sequent(term_union asl1' asl2',safe_mk_eq c1 c2)
+  let DEDUCT_ANTISYM_RULE =
+    let counter = create_counter "DEDUCT_ANTISYM_RULE" in
+    let DEDUCT_ANTISYM_RULE (Sequent(asl1,c1)) (Sequent(asl2,c2)) =
+      let asl1' = term_remove c2 asl1 and asl2' = term_remove c1 asl2 in
+      Sequent(term_union asl1' asl2',safe_mk_eq c1 c2) in
+    fun t1 t2 ->
+      incr counter; DEDUCT_ANTISYM_RULE t1 t2
 
 (* ------------------------------------------------------------------------- *)
 (* Type and term instantiation.                                              *)
 (* ------------------------------------------------------------------------- *)
 
-  let INST_TYPE theta (Sequent(asl,c)) =
-    let inst_fn = inst theta in
-    Sequent(term_image inst_fn asl,inst_fn c)
+  let INST_TYPE =
+    let counter = create_counter "INST_TYPE" in
+    let INST_TYPE theta (Sequent(asl,c)) =
+      let inst_fn = inst theta in
+      Sequent(term_image inst_fn asl,inst_fn c) in
+    fun theta t ->
+      incr counter; INST_TYPE theta t
 
-  let INST theta (Sequent(asl,c)) =
-    let inst_fun = vsubst theta in
-    Sequent(term_image inst_fun asl,inst_fun c)
+  let INST =
+    let counter = create_counter "INST" in
+    let INST theta (Sequent(asl,c)) =
+      let inst_fun = vsubst theta in
+      Sequent(term_image inst_fun asl,inst_fun c) in
+    fun theta t ->
+      incr counter; INST theta t
 
 (* ------------------------------------------------------------------------- *)
 (* Handling of axioms.                                                       *)

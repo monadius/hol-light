@@ -1,0 +1,55 @@
+open Hol_core;;
+open Tame_defs;;
+open Tame_defs_unrolled;;
+open Eval_support;;
+
+Arith_options.base := 100;;
+Arith_options.cached := false;;
+
+let f_SUC a opt = trans_opt opt (Nat_arith.nsuc a);;
+let f_PRE a opt = trans_opt opt (Nat_arith.npre a);;
+let f_ADD a b opt = trans_opt opt (Nat_arith.nadd a b);;
+let f_SUB a b opt = trans_opt opt (Nat_arith.nsub a b);;
+let f_MUL a b opt = trans_opt opt (Nat_arith.nmul a b);;
+let f_LE tm1 tm2 opt = trans_opt opt (fst (Nat_arith.nle tm1 tm2));;
+let f_LT tm1 tm2 opt = trans_opt opt (fst (Nat_arith.nlt tm1 tm2));;
+let f_MIN a b opt = trans_opt opt (Nat_arith.nmin a b);;
+let f_MAX a b opt = trans_opt opt (Nat_arith.nmax a b);;
+
+let f_EQ_num tm1 tm2 opt = trans_opt opt (fst (Nat_arith.neq tm1 tm2));;
+
+let numeral = Nat_arith.replace_numerals;;
+install_user_printer ("nat", Nat_arith.print_nat);;
+(* install_parser ("nat", Nat_arith.parse_nat);; *)
+
+let standardize = Misc_vars.standardize;;
+let standardize_tm = Misc_vars.standardize_tm;;
+
+let NOT_CLAUSES' = prove(`~T = F /\ ~F = T`, REWRITE_TAC[]);;
+
+let EQ_BOOL = prove
+  (`(T = T <=> T) /\
+    (F = F <=> T) /\
+    (T = F <=> F) /\
+    (F = T <=> F)`,
+  REWRITE_TAC[]);;
+
+let EQ_PAIR = prove
+  (`(xy:(A#B) = xy <=> T) /\
+    ((x:A, y:B) = (a, b) <=> x = a /\ y = b)`,
+  REWRITE_TAC[PAIR_EQ]);;
+
+let EQ_LIST = prove
+  (`(xs:(A)list = xs <=> T) /\
+    ([] = CONS x xs <=> F) /\
+    (CONS x xs = [] <=> F) /\
+    (CONS x xs = CONS y ys <=> x = y /\ xs = ys)`,
+  REWRITE_TAC[injectivity "list"; distinctness "list"]);;
+
+let EQ_FACE = prove
+  (`(f:face = f <=> T) /\
+    (Face xs Final = Face ys Final <=> xs = ys) /\
+    (Face xs Nonfinal = Face ys Nonfinal <=> xs = ys) /\
+    (Face xs Final = Face ys Nonfinal <=> F) /\
+    (Face xs Nonfinal = Face ys Final <=> F)`,
+  REWRITE_TAC[injectivity "face"; distinctness "facetype"]);;

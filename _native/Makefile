@@ -58,10 +58,17 @@ HOL_CORE_SRC0=\
 	hol_core.ml
 
 TEST_TAME_SRC=\
-	tame/test_tame.hl \
-	tame/test_tame_support.hl \
-	tame/out.hl \
-	tame/test_main.hl
+	tame/arith_options.hl \
+	tame/misc_functions.hl \
+	tame/misc_vars.hl \
+	tame/nat_arith.hl \
+	tame/eval_support.hl \
+	tame/test_common.hl \
+	tame/tame_defs.hl \
+	tame/tame_defs_unrolled.hl \
+	tame/tame_support.hl \
+	tame/out2.hl \
+	tame/main.hl
 
 HOL_CORE_SRC=$(addprefix $(HOL_DIR)/,$(HOL_CORE_SRC0))
 
@@ -95,9 +102,9 @@ profile: OPTIONS=-p
 profile: $(HOL_CORE_OBJ)
 	ocamlopt -linkall -o core_test unix.cmxa nums.cmxa $(OPTIONS) $(INCLUDE) $(HOL_CORE_OBJ)
 
-tame_test: OPTIONS=-p
+#tame_test: OPTIONS=-p
 
-tame_test: $(HOL_CORE_OBJ) $(TEST_TAME_OBJ)
+tame: $(HOL_CORE_OBJ) $(TEST_TAME_OBJ)
 	ocamlopt -linkall -o tame_test unix.cmxa nums.cmxa $(OPTIONS) $(INCLUDE) \
 		$(HOL_CORE_OBJ) $(TEST_TAME_OBJ)
 

@@ -3257,7 +3257,6 @@ let f_squanderVertex =
           if is_true_th r1 then
             let th0 = MK_COMB (MK_COMB (MK_COMB (REFL a33, r1), REFL a43), REFL a44) in
             let th1 = INST [(a43, var_t); (a44, var_e)] COND_num_T in
-            let () = eval_error "test2" "" [concl base_th; concl th0] in
             let base_th = TRANS (TRANS base_th th0) th1 in
             let r2 = f_EQ_num p a31 (None : thm option) in
             if is_true_th r2 then
@@ -3300,7 +3299,6 @@ let f_squanderVertex =
             let th1 = INST [(a43, var_t); (a44, var_e)] COND_num_F in
             let base_th = TRANS (TRANS base_th th0) th1 in
             let r2 = f_EQ_num q a24 (None : thm option) in
-            let () = eval_error "test3" "" [concl base_th; concl r2; q; a24; a38] in
             if is_true_th r2 then
               let th0 = MK_COMB (MK_COMB (MK_COMB (REFL a33, r2), REFL a41), REFL a42) in
               let th1 = INST [(a41, var_t); (a42, var_e)] COND_num_T in

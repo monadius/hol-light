@@ -59,6 +59,7 @@ HOL_CORE_SRC0=\
 
 TEST_TAME_SRC=\
 	tame/arith_options.hl \
+	tame/tame_options.hl \
 	tame/misc_functions.hl \
 	tame/misc_vars.hl \
 	tame/nat_arith.hl \
@@ -67,7 +68,7 @@ TEST_TAME_SRC=\
 	tame/tame_defs.hl \
 	tame/tame_defs_unrolled.hl \
 	tame/tame_support.hl \
-	tame/out2.hl \
+	tame/out.hl \
 	tame/main.hl
 
 HOL_CORE_SRC=$(addprefix $(HOL_DIR)/,$(HOL_CORE_SRC0))

@@ -3,9 +3,6 @@ open Tame_defs;;
 open Tame_defs_unrolled;;
 open Eval_support;;
 
-Arith_options.base := 100;;
-Arith_options.cached := false;;
-
 let f_SUC a opt = trans_opt opt (Nat_arith.nsuc a);;
 let f_PRE a opt = trans_opt opt (Nat_arith.npre a);;
 let f_ADD a b opt = trans_opt opt (Nat_arith.nadd a b);;

@@ -1,0 +1,2 @@
+Arith_options.base := 100;;
+Arith_options.cached := false;;

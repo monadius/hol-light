@@ -20,32 +20,25 @@ reset_test_results();;
 (* Small test *)
 reset_all_counters();;
 clear_all_memos();;
+assert_noexception ~name:"p = 2: 10000" 
+  (Out.f_tameEnumFilterBounded (numeral `2`) (numeral `10000`)) None;;
 
-try
-  Out2.f_squanderVertex (numeral `1`) (numeral `1`) None
-with Eval_error errs -> print_eval_error errs; failwith "failure";;
-
-try
-  assert_noexception ~name:"p = 2: 10000" 
-    (Out2.f_tameEnumFilterBounded (numeral `2`) (numeral `10000`)) None
-with Eval_error errs -> print_eval_error errs; failwith "failure";;
-
-print_results();
+print_results();;
 
 (* 11651 (3h 14m 11s) (182 times slower than OCaml) *)
 reset_all_counters();;
 clear_all_memos();;
 let r1, time1, _ = 
   assert_noexception ~name:"p = 0: all" 
-    (Out2.f_tameEnumFilterBounded (numeral `0`) (numeral `400000`)) None;;
+    (Out.f_tameEnumFilterBounded (numeral `0`) (numeral `400000`)) None;;
 
-print_results();
+print_results();;
 
 (* 23478 (6h 31m 18s) (154 times slower than OCaml) *)
 reset_all_counters();;
 clear_all_memos();;
 let r2, time2, _ = 
   assert_noexception ~name:"p = 1: 1_000_000"
-    (Out2.f_tameEnumFilterBounded (numeral `1`) (numeral `1000000`)) None;;
+    (Out.f_tameEnumFilterBounded (numeral `1`) (numeral `1000000`)) None;;
 
 print_results();;

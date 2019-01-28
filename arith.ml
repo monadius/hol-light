@@ -10,6 +10,7 @@ include Recursion;;
 (*            (c) Copyright, University of Cambridge 1998                    *)
 (*              (c) Copyright, John Harrison 1998-2007                       *)
 (*                 (c) Copyright, Marco Maggesi 2015                         *)
+(*      (c) Copyright, Andrea Gabrielli, Marco Maggesi 2017-2018             *)
 (* ========================================================================= *)
 
 needs "recursion.ml";;
@@ -1108,6 +1109,14 @@ let DIVISION_SIMP = prove
   ASM_SIMP_TAC[DIV_ZERO; MOD_ZERO; MULT_CLAUSES; ADD_CLAUSES] THEN
   ASM_MESON_TAC[DIVISION; MULT_SYM]);;
 
+let MOD_LT_EQ = prove
+ (`!m n. m MOD n < n <=> ~(n = 0)`,
+  MESON_TAC[DIVISION; LE_1; CONJUNCT1 LT]);;
+
+let MOD_LT_EQ_LT = prove
+ (`!m n. m MOD n < n <=> 0 < n`,
+  MESON_TAC[DIVISION; LE_1; CONJUNCT1 LT]);;
+
 let DIVMOD_UNIQ_LEMMA = prove
  (`!m n q1 r1 q2 r2. ((m = q1 * n + r1) /\ r1 < n) /\
                      ((m = q2 * n + r2) /\ r2 < n)
@@ -1171,6 +1180,16 @@ let MOD_LT = prove
   REPEAT STRIP_TAC THEN MATCH_MP_TAC MOD_UNIQ THEN
   EXISTS_TAC `0` THEN ASM_REWRITE_TAC[MULT_CLAUSES; ADD_CLAUSES]);;
 
+let MOD_ADD_CASES = prove
+ (`!m n p.
+        m < p /\ n < p
+        ==> (m + n) MOD p = if m + n < p then m + n else (m + n) - p`,
+  REPEAT STRIP_TAC THEN COND_CASES_TAC THEN ASM_SIMP_TAC[MOD_LT] THEN
+  MATCH_MP_TAC MOD_UNIQ THEN EXISTS_TAC `1` THEN
+  RULE_ASSUM_TAC(REWRITE_RULE[NOT_LT]) THEN CONJ_TAC THENL
+   [REWRITE_TAC[MULT_CLAUSES] THEN ASM_MESON_TAC[SUB_ADD; ADD_SYM];
+    ASM_MESON_TAC[LT_ADD_RCANCEL; SUB_ADD; LT_ADD2]]);;
+
 let MOD_EQ = prove
  (`!m n p q. m = n + q * p ==> m MOD p = n MOD p`,
   REPEAT GEN_TAC THEN ASM_CASES_TAC `p = 0` THENL
@@ -1209,7 +1228,7 @@ let MOD_LE_TWICE = prove
   TRANS_TAC LE_TRANS `m + n MOD m` THEN
   ASM_SIMP_TAC[MULT_2; LE_ADD_RCANCEL; DIVISION; LT_IMP_LE; LE_1] THEN
   ONCE_REWRITE_TAC[ADD_SYM] THEN
-  SUBGOAL_THEN `n MOD m = n - m` 
+  SUBGOAL_THEN `n MOD m = n - m`
    (fun th -> ASM_SIMP_TAC[LE_REFL; SUB_ADD; th]) THEN
   MATCH_MP_TAC MOD_UNIQ THEN EXISTS_TAC `1` THEN
   ONCE_REWRITE_TAC[ADD_SYM] THEN ASM_SIMP_TAC[MULT_CLAUSES; SUB_ADD] THEN
@@ -1244,6 +1263,11 @@ let MOD_MOD_REFL = prove
   MP_TAC(SPECL [`m:num`; `n:num`; `1`] MOD_MOD) THEN
   ASM_REWRITE_TAC[MULT_CLAUSES; MULT_EQ_0] THEN
   REWRITE_TAC[ONE; NOT_SUC]);;
+
+let MOD_MOD_LE = prove
+ (`!m n p. ~(n = 0) /\ n <= p ==> (m MOD n) MOD p = m MOD n`,
+  REPEAT STRIP_TAC THEN MATCH_MP_TAC MOD_LT THEN
+  ASM_MESON_TAC[DIVISION; LTE_TRANS]);;
 
 let DIV_MULT2 = prove
  (`!m n p. ~(m = 0) ==> ((m * n) DIV (m * p) = n DIV p)`,
@@ -1353,6 +1377,10 @@ let ODD_MOD = prove
    [SIMP_TAC[DIVISION; TWO; NOT_SUC]; ALL_TAC] THEN
   SPEC_TAC(`n MOD 2`,`n:num`) THEN
   REWRITE_TAC[TWO; ONE; LT] THEN MESON_TAC[NOT_SUC]);;
+
+let MOD_2_CASES = prove
+ (`!n. n MOD 2 = if EVEN n then 0 else 1`,
+  MESON_TAC[EVEN_MOD; ODD_MOD; NOT_ODD]);;
 
 let MOD_MULT_RMOD = prove
  (`!m n p. (m * (p MOD n)) MOD n = (m * p) MOD n`,
@@ -1495,11 +1523,30 @@ let DIV_MOD = prove
     ASM_SIMP_TAC[LE_RDIV_EQ; MULT_EQ_0; DIV_DIV; LEFT_ADD_DISTRIB]] THEN
   REWRITE_TAC[MULT_AC] THEN MESON_TAC[ADD_SYM; MULT_SYM; LE_ADD_RCANCEL]);;
 
+let MOD_MULT_MOD = prove
+ (`!m n p. m MOD (n * p) = n * (m DIV n) MOD p + m MOD n`,
+  REPEAT GEN_TAC THEN ASM_CASES_TAC `n = 0` THEN
+  ASM_REWRITE_TAC[MULT_CLAUSES; MOD_ZERO; ADD_CLAUSES] THEN
+  ASM_CASES_TAC `p = 0` THENL
+   [ASM_REWRITE_TAC[MULT_CLAUSES; MOD_ZERO] THEN
+    ASM_METIS_TAC[DIVISION; MULT_SYM];
+    ALL_TAC] THEN
+  MATCH_MP_TAC(MESON[EQ_ADD_LCANCEL] `(?a. a + x = a + y) ==> x = y`) THEN
+  EXISTS_TAC `m DIV n DIV p * n * p` THEN
+  REWRITE_TAC[DIVISION_SIMP; DIV_DIV] THEN
+  REWRITE_TAC[AC MULT_AC `d * n * p = n * (d * p)`] THEN
+  REWRITE_TAC[GSYM LEFT_ADD_DISTRIB; ADD_ASSOC; GSYM DIV_DIV] THEN
+  REWRITE_TAC[DIVISION_SIMP]);;
+
 let MOD_MOD_EXP_MIN = prove
- (`!x p m n. ~(p = 0)
-             ==> x MOD (p EXP m) MOD (p EXP n) = x MOD (p EXP (MIN m n))`,
-  REPEAT STRIP_TAC THEN REWRITE_TAC[MIN] THEN
-  ASM_CASES_TAC `m:num <= n` THEN ASM_REWRITE_TAC[] THENL
+ (`!x p m n. x MOD (p EXP m) MOD (p EXP n) = x MOD (p EXP (MIN m n))`,
+  REPEAT STRIP_TAC THEN ASM_CASES_TAC `p = 0` THENL
+   [ASM_REWRITE_TAC[EXP_ZERO; MIN] THEN ASM_CASES_TAC `m = 0` THEN
+    ASM_REWRITE_TAC[MOD_ZERO; MOD_1; MOD_0; LE_0] THEN
+    ASM_CASES_TAC `m:num <= n` THEN ASM_REWRITE_TAC[] THEN
+    COND_CASES_TAC THEN ASM_REWRITE_TAC[] THEN ASM_MESON_TAC[LE];
+    REWRITE_TAC[MIN]] THEN
+   ASM_CASES_TAC `m:num <= n` THEN ASM_REWRITE_TAC[] THENL
    [FIRST_X_ASSUM(CHOOSE_THEN SUBST1_TAC o GEN_REWRITE_RULE I [LE_EXISTS]) THEN
     MATCH_MP_TAC MOD_LT THEN MATCH_MP_TAC LTE_TRANS THEN
     EXISTS_TAC `p EXP m` THEN
@@ -1675,6 +1722,40 @@ let DEPENDENT_CHOICE = prove
         (?a. P 0 a) /\ (!n x. P n x ==> ?y. P (SUC n) y /\ R n x y)
         ==> ?f. (!n. P n (f n)) /\ (!n. R n (f n) (f(SUC n)))`,
   MESON_TAC[DEPENDENT_CHOICE_FIXED]);;
+
+(* ------------------------------------------------------------------------- *)
+(* Conversion that elimimates every occurrence of `NUMERAL`, `BIT0`,         *)
+(* `BIT1`, `_0` that is not part of a well-formed numeral.                   *)
+(* ------------------------------------------------------------------------- *)
+
+let BITS_ELIM_CONV : conv =
+  let NUMERAL_pth = prove(`m = n <=> NUMERAL m = n`,REWRITE_TAC[NUMERAL])
+  and ZERO_pth = GSYM (REWRITE_CONV[NUMERAL] `0`)
+  and BIT0_pth,BIT1_pth = CONJ_PAIR
+   (prove(`(m = n <=> BIT0 m = 2 * n) /\
+           (m = n <=> BIT1 m = 2 * n + 1)`,
+    CONJ_TAC THEN GEN_REWRITE_TAC (RAND_CONV o LAND_CONV) [BIT0; BIT1] THEN
+    REWRITE_TAC[ADD1; EQ_ADD_RCANCEL; GSYM MULT_2] THEN
+    REWRITE_TAC[EQ_MULT_LCANCEL] THEN
+    REWRITE_TAC[TWO; NOT_SUC]))
+  and mvar,nvar = `m:num`,`n:num` in
+  let rec BITS_ELIM_CONV : conv =
+    fun tm -> match tm with
+      Const("_0",_) -> ZERO_pth
+    | Var _ | Const _ -> REFL tm
+    | Comb(Const("NUMERAL",_),mtm) ->
+        if is_numeral tm then REFL tm else
+        let th = BITS_ELIM_CONV mtm in
+        EQ_MP (INST[mtm,mvar;rand(concl th),nvar] NUMERAL_pth) th
+    | Comb(Const("BIT0",_),mtm) ->
+        let th = BITS_ELIM_CONV mtm in
+        EQ_MP (INST [mtm,mvar;rand(concl th),nvar] BIT0_pth) th
+    | Comb(Const("BIT1",_),mtm) ->
+        let th = BITS_ELIM_CONV mtm in
+        EQ_MP (INST [mtm,mvar;rand(concl th),nvar] BIT1_pth) th
+    | Comb _ -> COMB_CONV BITS_ELIM_CONV tm
+    | Abs _ -> ABS_CONV BITS_ELIM_CONV tm in
+  BITS_ELIM_CONV;;
 
 (* AS: *)
 print_endline "arith.ml loaded";;

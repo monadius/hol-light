@@ -12,7 +12,7 @@ include Impconv;;
 (*                 (c) Copyright, Marco Maggesi 2015                         *)
 (* ========================================================================= *)
 
-needs "quot.ml";;
+needs "impconv.ml";;
 
 (* ------------------------------------------------------------------------- *)
 (* Constants implementing (or at least tagging) syntactic sugar.             *)

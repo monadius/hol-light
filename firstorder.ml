@@ -1,3 +1,7 @@
+(* AS: *)
+open Parser;;
+include Meson;;
+
 (* ========================================================================= *)
 (* General facilities for manipulating first-order shadow terms.             *)
 (*                                                                           *)
@@ -255,3 +259,6 @@ module Mapping = struct
       srules
 
 end
+
+(* AS: *)
+print_endline "firstorder.ml loaded";;

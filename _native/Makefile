@@ -32,6 +32,7 @@ HOL_CORE_SRC0=\
 	trivia.ml \
 	canon.ml \
 	meson.ml \
+	firstorder.ml \
 	metis.ml \
 	quot.ml \
 	impconv.ml \

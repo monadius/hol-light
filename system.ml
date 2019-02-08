@@ -53,13 +53,15 @@ set_jrh_lexer;;
 
 include Num;;
 
-let print_num n =
-  Format.open_hbox();
-  Format.print_string(string_of_num n);
-  Format.close_box();;
+let pp_print_num fmt n =
+  Format.pp_open_hbox fmt ();
+  Format.pp_print_string fmt (string_of_num n);
+  Format.pp_close_box fmt ();;
+
+let print_num = pp_print_num Format.std_formatter;;
 
 (* AS:
-#install_printer print_num;;
+#install_printer pp_print_num;;
 *)
 
 (* AS: *)

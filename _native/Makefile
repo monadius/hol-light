@@ -1,10 +1,11 @@
 HOL_DIR=..
 
+CAMLP5_PATH=
 CAMLP5=camlp5r pa_lexer.cmo pa_extend.cmo q_MLast.cmo -I $(HOL_DIR) pa_j.cmo
 
-OPT_ML=ocamlopt -c -pp "$(CAMLP5)"
+OPT_ML=ocamlopt -c -pp "$(CAMLP5_PATH)$(CAMLP5)"
 OPT_MLI=$(OPT_ML)
-OPT_HL=ocamlopt -c -pp "$(CAMLP5) -impl"
+OPT_HL=ocamlopt -c -pp "$(CAMLP5_PATH)$(CAMLP5) -impl"
 OPTIONS=
 
 DIRS=$(HOL_DIR) tame
@@ -103,6 +104,12 @@ profile: OPTIONS=-p
 
 profile: $(HOL_CORE_OBJ)
 	ocamlopt -linkall -o core_test unix.cmxa nums.cmxa $(OPTIONS) $(INCLUDE) $(HOL_CORE_OBJ)
+
+spacetime: CAMLP5_PATH=~/.opam/4.04.0/bin/
+
+spacetime: $(HOL_CORE_OBJ)
+	ocamlopt -linkall -o core_spacetime unix.cmxa nums.cmxa $(OPTIONS) $(INCLUDE) $(HOL_CORE_OBJ)
+
 
 #tame_test: OPTIONS=-p
 

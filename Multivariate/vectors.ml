@@ -1,3 +1,9 @@
+(* AS: *)
+open Hol_core;;
+open Card;;
+open Floor;;
+open Misc;;
+
 (* ========================================================================= *)
 (* Real vectors in Euclidean space, and elementary linear algebra.           *)
 (*                                                                           *)
@@ -10867,3 +10873,6 @@ let PARTIAL_EXPAND_QUANTS_CONV avoid th =
   conv;;
 
 let EXPAND_QUANTS_CONV = PARTIAL_EXPAND_QUANTS_CONV [];;
+
+(* AS: *)
+print_endline "Multivariate/vectors.ml loaded";;

@@ -1,3 +1,14 @@
+(* AS: *)
+open Hol_core;;
+open Wo;;
+open Floor;;
+open Card;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+
 (* ========================================================================= *)
 (* Convex sets, functions and related things.                                *)
 (*                                                                           *)
@@ -18009,3 +18020,6 @@ let CONVEX_IMP_PIECEWISE_MONOTONE = prove
     REPEAT STRIP_TAC THEN FIRST_X_ASSUM MATCH_MP_TAC THEN
     ASM_REWRITE_TAC[SEGMENT_1] THEN COND_CASES_TAC THEN
     ASM_REWRITE_TAC[IN_INTERVAL_1] THEN ASM_REAL_ARITH_TAC]);;
+
+(* AS: *)
+print_endline "Multivariate/convex.ml loaded";;

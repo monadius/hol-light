@@ -1,3 +1,18 @@
+(* AS: *)
+open Hol_core;;
+open Floor;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+open Convex;;
+open Measure;;
+open Complexes;;
+open Canal;;
+open Transcendentals;;
+open Realanalysis;;
+
 (* ========================================================================= *)
 (* Some geometric notions in real^N.                                         *)
 (* ========================================================================= *)
@@ -1247,3 +1262,6 @@ let ANGLE_TRIANGLE_LAW = prove
 let VECTOR_ANGLE_TRIANGLE_LAW = prove
  (`!u v w:real^N. vector_angle u w <= vector_angle u v + vector_angle v w`,
   REWRITE_TAC[VECTOR_ANGLE_ANGLE; ANGLE_TRIANGLE_LAW]);;
+
+(* AS: *)
+print_endline "Multivariate/geom.ml loaded";;

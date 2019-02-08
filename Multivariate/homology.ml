@@ -1,3 +1,12 @@
+(* AS: *)
+open Hol_core;;
+open Iter;;
+open Card;;
+open Frag;;
+open Grouptheory;;
+open Misc;;
+open Metric;;
+
 (* ========================================================================= *)
 (* Basic setup of singular homology.                                         *)
 (* ========================================================================= *)
@@ -10541,3 +10550,6 @@ let INVARIANCE_OF_DIMENSION_EUCLIDEAN_SPACE = prove
     DISCH_THEN SUBST1_TAC THEN
     REWRITE_TAC[GSYM SUBSET_ANTISYM_EQ; SUBSET_EUCLIDEAN_SPACE] THEN
     ASM_ARITH_TAC]);;
+
+(* AS: *)
+print_endline "Multivariate/homology.ml loaded";;

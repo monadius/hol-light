@@ -1,3 +1,18 @@
+(* AS: *)
+open Hol_core;;
+open Card;;
+open Floor;;
+open Products;;
+open Permutations;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+open Convex;;
+open Paths;;
+open Derivatives;;
+
 (* ========================================================================= *)
 (* Kurzweil-Henstock gauge integration in many dimensions.                   *)
 (*                                                                           *)
@@ -26143,3 +26158,6 @@ let PICARD_LINDELOF_RIGHT = prove
   EXISTS_TAC `interval[t0,t0 + lift r0]` THEN HYP SIMP_TAC "v x'" [] THEN
   REMOVE_THEN "t" MP_TAC THEN
   SIMP_TAC[IN_INTERVAL_1; SUBSET_INTERVAL_1; REAL_LE_REFL]);;
+
+(* AS: *)
+print_endline "Multivariate/integration.ml loaded";;

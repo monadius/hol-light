@@ -1,3 +1,22 @@
+(* AS: *)
+open Hol_core;;
+open Products;;
+open Permutations;;
+open Floor;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+open Convex;;
+open Paths;;
+open Degree;;
+open Derivatives;;
+open Integration;;
+open Measure;;
+open Complexes;;
+open Canal;;
+
 (* ========================================================================= *)
 (* Complex transcendentals and their real counterparts.                      *)
 (*                                                                           *)
@@ -7542,3 +7561,6 @@ let FUBINI_TONELLI_POLAR = prove
       REWRITE_TAC[IN_INTERVAL_1; LIFT_DROP; DROP_VEC] THEN
       COND_CASES_TAC THEN ASM_REWRITE_TAC[NORM_0; LIFT_NUM] THEN
       ASM_REWRITE_TAC[NORM_MUL; LIFT_CMUL; real_abs]]]);;
+
+(* AS: *)
+print_endline "Multivariate/transcendentals.ml loaded";;

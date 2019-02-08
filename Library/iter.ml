@@ -1,3 +1,6 @@
+(* AS: *)
+open Hol_core;;
+
 (* ========================================================================= *)
 (* Iterated application of a function, ITER n f x = f^n(x).                  *)
 (*                                                                           *)
@@ -155,3 +158,6 @@ let ORDER_EXISTENCE_FINITE = prove
   MP_TAC(ISPECL [`R:A->A->bool`; `f:A->A`; `z:A`;
    `CARD {(R:A->A->bool)(ITER n f z) | n IN (:num)}`]
    ORDER_EXISTENCE_CARD) THEN ASM_REWRITE_TAC[LE_REFL] THEN MESON_TAC[]);;
+
+(* AS: *)
+print_endline "Library/iter.ml loaded";;

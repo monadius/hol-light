@@ -1,3 +1,12 @@
+(* AS: *)
+open Hol_core;;
+open Wo;;
+open Card;;
+open Floor;;
+open Products;;
+open Misc;;
+open Iter;;
+
 (* ========================================================================= *)
 (* Formalization of general topological and metric spaces in HOL Light       *)
 (*                                                                           *)
@@ -32407,3 +32416,6 @@ let KURATOWSKI_COMPONENT_NUMBER_INVARIANCE = prove
                               CONTINUOUS_MAP_IN_SUBTOPOLOGY]) THEN
   RULE_ASSUM_TAC(REWRITE_RULE[TOPSPACE_SUBTOPOLOGY]) THEN
   ASM SET_TAC[]);;
+
+(* AS: *)
+print_endline "Multivariate/metric.ml loaded";;

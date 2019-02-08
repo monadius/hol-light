@@ -1,3 +1,23 @@
+(* AS: *)
+open Hol_core;;
+open Card;;
+open Products;;
+open Floor;;
+open Binomial;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+open Convex;;
+open Paths;;
+open Derivatives;;
+open Integration;;
+open Measure;;
+open Complexes;;
+open Canal;;
+open Transcendentals;;
+
 (* ========================================================================= *)
 (* Some analytic concepts for R instead of R^1.                              *)
 (*                                                                           *)
@@ -17547,3 +17567,6 @@ let LEBESGUE_DENSITY_THEOREM = prove
   REWRITE_TAC[FORALL_LIFT; IN_ELIM_THM; LIFT_DROP; DIST_1] THEN
   GEN_REWRITE_TAC (LAND_CONV o ONCE_DEPTH_CONV) [COND_RAND] THEN
   REWRITE_TAC[DROP_VEC]);;
+
+(* AS: *)
+print_endline "Multivariate/realanalysis.ml loaded";;

@@ -1,3 +1,16 @@
+(* AS: *)
+open Hol_core;;
+open Card;;
+open Permutations;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+open Convex;;
+open Paths;;
+open Degree;;
+
 (* ========================================================================= *)
 (* Multivariate calculus in Euclidean space.                                 *)
 (*                                                                           *)
@@ -5756,3 +5769,6 @@ let CONVEX_ON_SECANT_DERIVATIVE = prove
   MATCH_MP_TAC(REWRITE_RULE[RIGHT_FORALL_IMP_THM] LINEAR_NEG) THEN
   REWRITE_TAC[GSYM o_DEF] THEN
   REWRITE_TAC[GSYM I_DEF; I_O_ID] THEN ASM_MESON_TAC[has_derivative]);;
+
+(* AS: *)
+print_endline "Multivariate/derivatives.ml loaded";;

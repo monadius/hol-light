@@ -1,3 +1,6 @@
+(* AS: *)
+open Hol_core;;
+
 (* ========================================================================= *)
 (* Permutations, both general and specifically on finite sets.               *)
 (* ========================================================================= *)
@@ -929,3 +932,6 @@ let SUM_OVER_PERMUTATIONS_NUMSEG = prove
   REPEAT STRIP_TAC THEN ASM_SIMP_TAC[GSYM NUMSEG_LREC] THEN
   MATCH_MP_TAC SUM_OVER_PERMUTATIONS_INSERT THEN
   REWRITE_TAC[FINITE_NUMSEG; IN_NUMSEG] THEN ARITH_TAC);;
+
+(* AS: *)
+print_endline "Library/permutations.ml loaded";;

@@ -1,3 +1,6 @@
+(* AS: *)
+open Hol_core;;
+
 (* ========================================================================= *)
 (* Binomial coefficients and the binomial theorem.                           *)
 (* ========================================================================= *)
@@ -321,3 +324,6 @@ let NUM_BINOM_CONV =
     if bop <> binom_tm then failwith "NUM_BINOM_CONV" else
     let nt,kt = dest_pair nkp in
     BINOM_RULE(dest_numeral nt,dest_numeral kt);;
+
+(* AS: *)
+print_endline "Library/binomial.ml loaded";;

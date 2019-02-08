@@ -1,3 +1,11 @@
+(* AS: *)
+open Hol_core;;
+open Misc;;
+open Vectors;;
+open Permutations;;
+open Floor;;
+open Products;;
+
 (* ========================================================================= *)
 (* Determinant and trace of a square matrix.                                 *)
 (*                                                                           *)
@@ -4774,3 +4782,6 @@ let GEOM_EQUAL_DIMENSION_RULE =
     let th2 = GEN_REWRITE_RULE (RAND_CONV o REDEPTH_CONV) [BETA_THM;ith] th1 in
     let th3 = GEN f (DISCH bod th2) in
     MP (CONV_RULE (REWR_CONV LEFT_FORALL_IMP_THM) th3) eth;;
+
+(* AS: *)
+print_endline "Multivariate/determinants.ml loaded";;

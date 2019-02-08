@@ -1,3 +1,8 @@
+(* AS: *)
+open Hol_core;;
+open Frag;;
+open Card;;
+
 (* ========================================================================= *)
 (* Simple formulation of group theory with a type of "(A)group".             *)
 (* ========================================================================= *)
@@ -6651,3 +6656,6 @@ let EXACT_SEQUENCE_HEXAGON_LEMMA = prove
        [group_isomorphisms; group_homomorphism; group_exactness;
         group_image; group_kernel]) THEN
   ASM SET_TAC[]);;
+
+(* AS: *)
+print_endline "Library/grouptheory.ml loaded";;

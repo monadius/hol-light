@@ -1,3 +1,7 @@
+(* AS: *)
+open Hol_core;;
+open Wo;;
+
 (* ========================================================================= *)
 (* Basic notions of cardinal arithmetic.                                     *)
 (* ========================================================================= *)
@@ -3230,3 +3234,6 @@ let CARD_EXP_FINITE_EQ = prove
   REWRITE_TAC[MESON[] `(?x. P x /\ Q x) <=> ~(!x. P x ==> ~Q x)`] THEN
   ASM_SIMP_TAC[SET_RULE `~(t = {}) ==> ((!a. a IN t ==> P) <=> P)`] THEN
   ASM_MESON_TAC[FINITE_SUBSET; FINITE_SING; EMPTY_SUBSET]);;
+
+(* AS: *)
+print_endline "Library/card.ml loaded";;

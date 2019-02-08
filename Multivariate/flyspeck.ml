@@ -1,3 +1,21 @@
+(* AS: *)
+open Hol_core;;
+open Floor;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Topology;;
+open Convex;;
+open Polytope;;
+open Integration;;
+open Measure;;
+open Complexes;;
+open Canal;;
+open Transcendentals;;
+open Realanalysis;;
+open Geom;;
+open Cross;;
+
 (* ========================================================================= *)
 (* Results intended for Flyspeck.                                            *)
 (* ========================================================================= *)
@@ -7008,3 +7026,6 @@ and equiv t1 t2 = can (term_match [] t1) t2 && can (term_match [] t2) t1 in
 let congs' =
   filter (fun th -> exists (equiv (concl th)) bcs) (basic_congs()) in
 set_basic_congs congs';;
+
+(* AS: *)
+print_endline "Multivariate/flyspeck.ml loaded";;

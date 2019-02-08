@@ -1,3 +1,6 @@
+(* AS: *)
+open Hol_core;;
+
 (* ========================================================================= *)
 (* Proof of some useful AC equivalents like wellordering and Zorn's Lemma.   *)
 (*                                                                           *)
@@ -1276,3 +1279,6 @@ let TOSET_COFINAL_WOSET = prove
   CONJ_TAC THENL
    [FIRST_X_ASSUM MATCH_MP_TAC THEN FIRST_ASSUM ACCEPT_TAC;
     ASM SET_TAC[]]);;
+
+(* AS: *)
+print_endline "Library/wo.ml loaded";;

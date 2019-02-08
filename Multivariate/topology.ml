@@ -1,3 +1,16 @@
+(* AS: *)
+open Hol_core;;
+open Wo;;
+open Card;;
+open Iter;;
+open Floor;;
+open Permutations;;
+open Products;;
+open Misc;;
+open Vectors;;
+open Metric;;
+open Determinants;;
+
 (* ========================================================================= *)
 (* Elementary topology in Euclidean space.                                   *)
 (*                                                                           *)
@@ -36617,3 +36630,6 @@ let SUBORDINATE_PARTITION_OF_UNITY = prove
     MATCH_MP_TAC SETDIST_SING_IN_SET THEN ASM SET_TAC[];
     ASM_SIMP_TAC[LIFT_SUM; o_DEF] THEN MATCH_MP_TAC CONTINUOUS_VSUM THEN
     ASM_SIMP_TAC[CONTINUOUS_AT_LIFT_SETDIST; CONTINUOUS_AT_WITHIN]]);;
+
+(* AS: *)
+print_endline "Multivariate/topology.ml loaded";;

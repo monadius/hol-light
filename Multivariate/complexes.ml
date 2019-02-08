@@ -1,3 +1,11 @@
+(* AS: *)
+open Hol_core;;
+open Products;;
+open Vectors;;
+open Determinants;;
+open Topology;;
+open Convex;;
+
 (* ========================================================================= *)
 (* The type "real^2" regarded as the complex numbers.                        *)
 (*                                                                           *)
@@ -2247,3 +2255,6 @@ let th = prove
   REPEAT STRIP_TAC THEN MATCH_MP_TAC CPRODUCT_EQ THEN
   ASM_SIMP_TAC[IN_ELIM_THM; IN_NUMSEG]) in
   extend_basic_congs (map SPEC_ALL (CONJUNCTS th));;
+
+(* AS: *)
+print_endline "Multivariate/complexes.ml loaded";;

@@ -1,3 +1,6 @@
+(* AS: *)
+open Hol_core;;
+
 (* ========================================================================= *)
 (* A formulation of free Abelian groups on :A using a type :(A)frag.         *)
 (* ========================================================================= *)
@@ -420,3 +423,6 @@ let FRAG_SPLIT = prove
     CONJ_TAC THENL [ALL_TAC; CONV_TAC FRAG_MODULE] THEN
     REPEAT STRIP_TAC THEN COND_CASES_TAC THEN ASM_REWRITE_TAC[] THEN
     CONV_TAC FRAG_MODULE]);;
+
+(* AS: *)
+print_endline "Library/frag.ml loaded";;

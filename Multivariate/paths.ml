@@ -1,3 +1,15 @@
+(* AS: *)
+open Hol_core;;
+open Card;;
+open Floor;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+open Homology;;
+open Convex;;
+
 (* ========================================================================= *)
 (* Paths, connectedness, homotopy, simple connectedness & contractibility.   *)
 (*                                                                           *)
@@ -29029,3 +29041,6 @@ let HOMEOMORPHIC_SEPARATION = prove
   REWRITE_TAC[GSYM HAS_SIZE] THEN BINOP_TAC THEN
   MATCH_MP_TAC HAS_SIZE_EQ_COMPONENTS_COMPLEMENTS THEN
   ASM_REWRITE_TAC[]);;
+
+(* AS: *)
+print_endline "Multivariate/paths.ml loaded";;

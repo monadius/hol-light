@@ -1,3 +1,21 @@
+(* AS: *)
+open Hol_core;;
+open Wo;;
+open Card;;
+open Floor;;
+open Products;;
+open Permutations;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+open Convex;;
+open Paths;;
+open Polytope;;
+open Derivatives;;
+open Integration;;
+
 (* ========================================================================= *)
 (* Lebesgue measure, measurable functions (defined via the gauge integral).  *)
 (*                                                                           *)
@@ -31558,3 +31576,6 @@ let STEPANOV_UNIV = prove
   GEN_TAC THEN
   MP_TAC(ISPECL [`f:real^M->real^N`; `(:real^M)`] STEPANOV) THEN
   ASM_REWRITE_TAC[OPEN_UNIV; IN_UNIV]);;
+
+(* AS: *)
+print_endline "Multivariate/measure.ml loaded";;

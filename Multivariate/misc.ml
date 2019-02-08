@@ -1,3 +1,8 @@
+(* AS: *)
+open Hol_core;;
+open Card;;
+open Floor;;
+
 (* ========================================================================= *)
 (* Various convenient background stuff not specifically to do with R^n.      *)
 (*                                                                           *)
@@ -2600,3 +2605,6 @@ let CARD_SUSLIN_EQ = prove
   MATCH_MP_TAC MONO_AND THEN REWRITE_TAC[CARD_SUSLIN_LE] THEN
   MATCH_MP_TAC(REWRITE_RULE[IMP_CONJ_ALT] CARD_LE_TRANS) THEN
   MATCH_MP_TAC CARD_LE_SUBSET THEN REWRITE_TAC[SUSLIN_SUPERSET]);;
+
+(* AS: *)
+print_endline "Multivariate/misc.ml loaded";;

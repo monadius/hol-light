@@ -1,3 +1,9 @@
+(* AS: *)
+open Hol_core;;
+open Vectors;;
+open Topology;;
+open Determinants;;
+
 (* ========================================================================= *)
 (* Cross products in real^3.                                                 *)
 (* ========================================================================= *)
@@ -277,3 +283,6 @@ let CROSS_LINEAR_IMAGE_WEAK = prove
            CROSS_ORTHOGONAL_TRANSFORMATION]);;
 
 add_linear_invariants [CROSS_LINEAR_IMAGE_WEAK];;
+
+(* AS: *)
+print_endline "Multivariate/cross.ml loaded";;

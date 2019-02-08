@@ -1,3 +1,15 @@
+(* AS: *)
+open Hol_core;;
+open Floor;;
+open Card;;
+open Misc;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+open Convex;;
+open Paths;;
+
 (* ========================================================================= *)
 (* Faces, extreme points, polytopes, polyhedra etc.                          *)
 (* ========================================================================= *)
@@ -8938,3 +8950,6 @@ let FINE_TRIANGULAR_SUBDIVISION_OF_CELL_COMPLEX = prove
   ASM_REWRITE_TAC[] THEN
   ASM_MESON_TAC[SUBSET; POLYTOPE_IMP_CONVEX; POLYTOPE_IMP_CLOSED;
                 SIMPLEX_IMP_POLYTOPE]);;
+
+(* AS: *)
+print_endline "Multivariate/polytope.ml loaded";;

@@ -1,3 +1,18 @@
+(* AS: *)
+open Hol_core;;
+open Misc;;
+open Floor;;
+open Vectors;;
+open Determinants;;
+open Metric;;
+open Topology;;
+open Convex;;
+open Paths;;
+open Derivatives;;
+open Integration;;
+open Measure;;
+open Complexes;;
+
 (* ========================================================================= *)
 (* Complex analysis.                                                         *)
 (*                                                                           *)
@@ -4029,3 +4044,6 @@ let REAL_COMPLEX_ENDOMORPHISM = prove
   SUBST1_TAC(SPEC `z:complex` COMPLEX_EXPAND) THEN
   ASM_REWRITE_TAC[I_THM; CNJ_ADD; CNJ_MUL; CNJ_CX; CNJ_II] THEN
   ASM_MESON_TAC[REAL_CX]);;
+
+(* AS: *)
+print_endline "Multivariate/canal.ml loaded";;

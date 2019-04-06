@@ -11,7 +11,7 @@ include Pair;;
 (*              (c) Copyright, John Harrison 1998-2007                       *)
 (* ========================================================================= *)
 
-needs "pair.ml";;
+needs "compute.ml";;
 
 (* ------------------------------------------------------------------------- *)
 (* Declare a new type "ind" of individuals.                                  *)

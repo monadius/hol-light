@@ -1,4 +1,5 @@
-
+(* AS: *)
+open Hol_core;;
 
 (* PUT BASIC ARITHMETIC OF THE NATURALS INTO THE SIMPLIFIER *)
 

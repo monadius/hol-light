@@ -73,6 +73,7 @@ echo '### Loading Examples/prog.ml'; echo 'loadt "Examples/prog.ml";;' | (time $
 echo '### Loading Examples/prover9.ml'; echo 'loadt "Examples/prover9.ml";;' | (time $hollight)
 echo '### Loading Library/q.ml'; echo 'loadt "Library/q.ml";;' | (time $hollight)
 echo '### Loading Examples/rectypes.ml'; echo 'loadt "Examples/rectypes.ml";;' | (time $hollight)
+echo '### Loading Library/ringtheory.ml'; echo 'loadt "Library/ringtheory.ml";;' | (time $hollight)
 echo '### Loading Examples/schnirelmann.ml'; echo 'loadt "Examples/schnirelmann.ml";;' | (time $hollight)
 echo '### Loading Examples/solovay.ml'; echo 'loadt "Examples/solovay.ml";;' | (time $hollight)
 echo '### Loading Examples/sos.ml'; echo 'loadt "Examples/sos.ml";;' | (time $hollight)
@@ -80,6 +81,7 @@ echo '### Loading Examples/ste.ml'; echo 'loadt "Examples/ste.ml";;' | (time $ho
 echo '### Loading Examples/sylvester_gallai.ml'; echo 'loadt "Examples/sylvester_gallai.ml";;' | (time $hollight)
 echo '### Loading Examples/vitali.ml'; echo 'loadt "Examples/vitali.ml";;' | (time $hollight)
 echo '### Loading Library/wo.ml'; echo 'loadt "Library/wo.ml";;' | (time $hollight)
+echo '### Loading Library/words.ml'; echo 'loadt "Library/words.ml";;' | (time $hollight)
 echo '### Loading Library/analysis.ml,/transc.ml,calc_real.ml,machin.ml,polylog.ml,poly.ml';
 (echo 'loadt "Library/analysis.ml";;'; echo 'loadt "Library/transc.ml";;';
  echo 'loadt "Library/calc_real.ml";;'; echo 'loadt "Examples/machin.ml";;';
@@ -100,6 +102,7 @@ echo '### Loading Geometric_Algebra/make.ml'; echo 'loadt "Geometric_Algebra/mak
 echo '### Loading IEEE/make.ml'; echo 'loadt "IEEE/make.ml";;' | (time $hollight)
 echo '### Loading IsabelleLight/make.ml'; echo 'loadt "IsabelleLight/make.ml";;' | (time $hollight)
 echo '### Loading Jordan/make.ml'; echo 'loadt "Jordan/make.ml";;' | (time $hollight)
+echo '### Loading Logic/make.ml'; echo 'loadt "Logic/make.ml";;' | (time $hollight)
 echo '### Loading Mizarlight/make.ml'; echo 'loadt "Mizarlight/make.ml";;' | (time $hollight)
 echo '### Loading miz3/make.ml, miz3/test.ml (twice)'; (echo 'loadt "miz3/make.ml";;'; echo 'loadt "miz3/test.ml";;'; echo 'loadt "miz3/test.ml";;') | (time $hollight)
 if which zchaff > /dev/null ; then

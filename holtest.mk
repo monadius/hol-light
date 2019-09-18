@@ -44,6 +44,7 @@ STANDALONE_EXAMPLES:=\
 	Examples/prover9 \
 	Library/q \
 	Examples/rectypes \
+	Library/ringtheory \
 	Examples/schnirelmann \
 	Examples/solovay \
 	Examples/sos \
@@ -51,6 +52,7 @@ STANDALONE_EXAMPLES:=\
 	Examples/sylvester_gallai \
 	Examples/vitali \
 	Library/wo \
+	Library/words \
 	Library/analysis-transc \
 	Library/prime-pratt \
 	Library/prime-pocklington \
@@ -64,6 +66,7 @@ EXTENDED_EXAMPLES:=\
 	IEEE/make \
 	IsabelleLight/make \
 	Jordan/make \
+	Logic/make \
 	Mizarlight/make \
 	miz3/make-test \
 	Minisat/make-taut \

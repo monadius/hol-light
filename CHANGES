@@ -8,6 +8,205 @@
   * page: https://github.com/jrh13/hol-light/commits/master         *
   * *****************************************************************
 
+Tue  3rd Sep 2019       sets.ml
+
+Added a trivial variant of IN_ELIM_PAIR_THM that is not an instance of it:
+
+  IN_ELIM_TRIPLE_THM =
+    |- !P a b c. a,b,c IN {x,y,z | P x y z} <=> P a b c
+
+Fri 30th Aug 2019       int.ml, Library/integer.ml
+
+Renamed the theorem INT_DIVISION_DECOMP in int.ml to INT_DIVISION_SIMP,
+which better maintains the pattern of DIVISION_SIMP and avoids a clash
+with a different theorem in Library/integer.ml. Also added one more
+simple theorem to the latter file, something that INTEGER_RULE won't do
+by default, depending as it does on the canonical choice of nonnegative
+integer gcds:
+
+  INT_GCD_EQ =
+    |- !x y u v.
+         (!d. d divides x /\ d divides y <=> d divides u /\ d divides v)
+         ==> gcd(x,y) = gcd(u,v)
+
+Fri 30th Aug 2019       int.ml
+
+Added some trivialities about integer div and rem, the last three being
+especially handy when reasoning about even/odd integers.
+
+  let INT_MUL_DIV_EQ = prove
+   |- (!m n. n * m div n = m <=> n divides m) /\
+      (!m n. m div n * n = m <=> n divides m)
+
+  INT_REM_2_CASES =
+    |- !n. n rem &2 = &0 \/ n rem &2 = &1
+
+  INT_REM_2_DIVIDES =
+    |- (!n. n rem &2 = &0 <=> &2 divides n) /\
+       (!n. n rem &2 = &1 <=> ~(&2 divides n))
+
+  NOT_INT_REM_2 =
+    |- (!n. ~(n rem &2 = &0) <=> n rem &2 = &1) /\
+       (!n. ~(n rem &2 = &1) <=> n rem &2 = &0)
+
+Wed  7th Aug 2019       grobner.ml
+
+Made a few small tweaks so that the derived rule inside RING becomes
+more delicate, and in particular more robust with respect to parameters
+and extra hypotheses on theorems.
+
+Sun  4th Aug 2019       Library/words.ml [new file]
+
+Added a new file with a basic theory of machine words via the type
+`:N word` of N-bit words. Here `:N` is a type of size N, so we are using
+essentially the same indexing scheme as in the Multivariate theories for
+vectors of size N. Note that this builds in a priori the assumption the
+wordsize is nonzero.
+
+Mappings `val:N word->num` and `word:num->N word` for unsigned values, and
+similar 2s-complement `ival:N word->int` and `iword:int->word`, cast
+(reducing modulo word in one direction) between words and numbers. The
+`bit` function gives a specific bit as a Boolean.
+
+The usual operations are provided like `word_add`, `word_xor`; currently
+for explicitness we don't overload the usual operators. Some have signed
+and unsigned variants (e.g. `word_ushr` is unsigned/logical shift right,
+while `word_ishr` is signed/arithmetical shift right).
+
+Tue 23rd Jul 2019       sets.ml
+
+Added one more simple theorem about Cartesian products, a kind of Skolemization
+theorem:
+
+  EXISTS_CARTESIAN_PRODUCT_ELEMENT =
+    |- !P k s.
+         (?z. z IN cartesian_product k s /\ (!i. i IN k ==> P i (z i))) <=>
+         (!i. i IN k ==> (?x. x IN s i /\ P i x))
+
+Wed 10th Jul 2019       sets.ml
+
+Added two more handy theorems about extensional/restricted functions:
+
+ RESTRICTION_UNIQUE =
+  |- !s f g.
+         RESTRICTION s f = g <=>
+         EXTENSIONAL s g /\ (!x. x IN s ==> f x = g x)
+
+ RESTRICTION_UNIQUE_ALT =
+  |- !s f g.
+         f = RESTRICTION s g <=>
+         EXTENSIONAL s f /\ (!x. x IN s ==> f x = g x)
+
+Mon 24th Jun 2019       sets.ml
+
+Added one more trivial set rewrite:
+
+  DISJOINT_SING : thm =
+    |- (!s a. DISJOINT s {a} <=> ~(a IN s)) /\
+       (!s a. DISJOINT {a} s <=> ~(a IN s))
+
+Sat 22nd Jun 2019       Library/ringtheory.ml [new file]
+
+Added a new library file with a basic development of ring theory (where
+ring = commutative ring with 1), using a type `:(A)ring`. The setup is
+directly analogous to "Library/grouptheory.ml" and follows roughly the
+same naming conventions for theorems and general style. So far this is
+mainly a lot of definitions of basic ring concepts and a slew of trivial
+theorems about them. New definitions:
+
+        field
+        ideal_generated
+        integral_domain
+        isomorphic_ring
+        prod_ring
+        product_ring
+        quotient_ring
+        ring_0
+        ring_1
+        ring_add
+        ring_associates
+        ring_automorphism
+        ring_carrier
+        ring_char
+        ring_coprime
+        ring_coset
+        ring_div
+        ring_divides
+        ring_endomorphism
+        ring_epimorphism
+        ring_homomorphism
+        ring_ideal
+        ring_image
+        ring_inv
+        ring_isomorphism
+        ring_isomorphisms
+        ring_kernel
+        ring_monomorphism
+        ring_mul
+        ring_neg
+        ring_of_int
+        ring_of_num
+        ring_pow
+        ring_regular
+        ring_setadd
+        ring_setmul
+        ring_setneg
+        ring_sub
+        ring_unit
+        ring_zerodivisor
+        subring_generated
+        subring_of
+        trivial_ring
+
+Mon 10th Jun 2019       sets.ml
+
+Added a few trivial but occasionally useful set restriction theorems:
+
+  DIFF_RESTRICT =
+    |- !P s t.
+           {x | x IN s DIFF t /\ P x} =
+           {x | x IN s /\ P x} DIFF {x | x IN t /\ P x}
+
+  INSERT_RESTRICT =
+    |- !P s a.
+           {x | x IN a INSERT s /\ P x} =
+           (if P a then a INSERT {x | x IN s /\ P x} else {x | x IN s /\ P x})
+
+  INTER_RESTRICT =
+    |- !P s t.
+           {x | x IN s INTER t /\ P x} =
+           {x | x IN s /\ P x} INTER {x | x IN t /\ P x}
+
+  UNION_RESTRICT =
+    |- !P s t.
+           {x | x IN s UNION t /\ P x} =
+           {x | x IN s /\ P x} UNION {x | x IN t /\ P x}
+
+Sat 18th May 2019       Multivariate/realanalysis.ml
+
+Merged in a fix from Alexey Solovyev for a curious change in behaviour starting
+with OCaml >= 4.06 (?). This seems to be connected with having a "let rec"
+definition containing a nested "let rec" for a local function with the same
+name. As Alexey pointed out this consistently crashes on recent OCaml versions:
+
+  let rec f =
+    let s t = t in
+    let rec f t = s t
+    and g a = a in
+    f;;
+
+  Gc.minor();;
+
+  f 0;;
+
+While it's probably fundamentally an OCaml bug, there was no good reason for
+the code to be the way it was anyway.
+
+Sat 18th May 2019       tactics.ml
+
+Merged a fix from Petros Papapanagiotou for a bug in metavariable
+instantiation in THEN/THENL. This bug had been around a long time!
+
 Sat 20th Apr 2019       lists.ml
 
 Added a two-list asymmetric analog of ALL / PAIRWISE called ALLPAIRS, with

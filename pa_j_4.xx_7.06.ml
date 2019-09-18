@@ -767,11 +767,27 @@ value eq_class_expr x y =
 
 #load "pa_lexer.cmo";
 
+(* AS: *)
+value quotexpander s =
+  if s = "" then failwith "Empty quotation" else
+  let c = String.sub s 0 1 in
+  if c = ":" then
+    "parse_type \""^
+    (String.escaped (String.sub s 1 (String.length s - 1)))^"\""
+  else if c = ";" then "parse_qproof \""^(String.escaped s)^"\"" else
+  let n = String.length s - 1 in
+  if String.sub s n 1 = ":"
+  then "\""^(String.escaped (String.sub s 0 n))^"\"" 
+  else "parse_term \""^(String.escaped s)^"\"";
+
+Quotation.add "tot" (Quotation.ExStr (fun x -> quotexpander));
+
 (* ------------------------------------------------------------------------- *)
 (* Added by JRH as a backdoor to change lexical conventions.                 *)
 (* ------------------------------------------------------------------------- *)
 
-value jrh_lexer = ref False;
+(* AS: always True *)
+value jrh_lexer = ref True;
 
 open Versdep;
 
@@ -803,8 +819,9 @@ value err ctx loc msg =
 (* JRH's hack to make the case distinction "unmixed" versus "mixed"          *)
 (* ------------------------------------------------------------------------- *)
 
-value is_uppercase s = String.uppercase s = s;
-value is_only_lowercase s = String.lowercase s = s && not(is_uppercase s);
+(* AS: uppercase_ascii and lowercase_ascii *)
+value is_uppercase s = String.uppercase_ascii s = s;
+value is_only_lowercase s = String.lowercase_ascii s = s && not(is_uppercase s);
 
 value jrh_identifier find_kwd id =
   let jflag = jrh_lexer.val in
